@@ -1,0 +1,17 @@
+Language: Cpp
+BasedOnStyle: WebKit
+TabWidth: 4
+IndentWidth: 4
+AlignConsecutiveAssignments: true
+AlignEscapedNewlinesLeft: false
+ColumnLimit: 80
+AllowShortLoopsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortCaseLabelsOnASingleLine: false
+AlwaysBreakTemplateDeclarations: true
+AlignAfterOpenBracket: AlwaysBreak
+BinPackArguments:      false
+BinPackParameters:     false
+PointerAlignment:      Left
+AlignTrailingComments: true
