@@ -1,11 +1,20 @@
 #pragma once
 
 #include <numeric>
+#include <span>
 #include <stdexcept>
 #include <variant>
 #include <vector>
 
 #include "fitsio.h"
+
+#include "types.hpp"
+
+using data_type_t   = unsigned long;
+using data_span_t   = std::span<data_type_t>;
+using data_t        = array_t<data_type_t>;
+using index_t       = long;
+using index_array_t = array_t<index_t>;
 
 class fits {
 public:

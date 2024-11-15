@@ -1,0 +1,1 @@
+# Astronomy imagery summation tool

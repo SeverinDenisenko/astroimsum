@@ -1,5 +1,8 @@
+#include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <cstddef>
+#include <cstdio>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -9,93 +12,183 @@
 #include "fits.hpp"
 #include "linalg.hpp"
 #include "threadpool.hpp"
+#include "types.hpp"
 
-class pipeline {
+class frame {
+private:
+    data_span_t data_;
+    index_t x_size_;
+    index_t y_size_;
+
 public:
-    pipeline(
-        std::string reference_image,
-        std::vector<std::string> input_images_names_,
-        std::string output_name_)
-        : reference_image_name_(reference_image)
-        , input_images_names_(input_images_names_)
-        , output_name_(output_name_)
+    frame()
+        : data_((unsigned long*)nullptr, 0)
+        , x_size_(0)
+        , y_size_(0)
     {
     }
 
-    void read_inputs()
+    frame(data_t& data, index_t x_size, index_t y_size)
+        : data_(data.data(), data.size())
+        , x_size_(x_size)
+        , y_size_(y_size)
     {
-        for (auto& name : input_images_names_) {
+    }
+
+    data_type_t& operator[](index_t x, index_t y)
+    {
+        return data_[y * x_size_ + x];
+    }
+
+    index_t x_size() const
+    {
+        return x_size_;
+    }
+
+    index_t y_size() const
+    {
+        return y_size_;
+    }
+
+    index_array_t dimentions() const
+    {
+        return { x_size_, y_size_ };
+    }
+
+    const data_span_t data() const
+    {
+        return data_;
+    }
+};
+
+class iframesaver {
+public:
+    virtual void save(const frame& fr) = 0;
+};
+
+class casual_framesaver : public iframesaver {
+public:
+    casual_framesaver(string_t out_name)
+        : out_name_(out_name)
+    {
+    }
+
+    void save(const frame& fr) override
+    {
+        fits::image_hdu result_image
+            = fits::image_hdu(index_array_t { fr.dimentions() });
+        result_image.bitpix = 32;
+        result_image.data   = data_t(fr.data().begin(), fr.data().end());
+
+        auto hdus = std::vector<fits::hdu> { result_image };
+        fits fits_out(out_name_, hdus, array_t<string_t>());
+    }
+
+public:
+    string_t out_name_;
+};
+
+class iframeloader {
+public:
+    virtual bool has_more()   = 0;
+    virtual frame get_frame() = 0;
+};
+
+class batch_frameloader : public iframeloader {
+public:
+    batch_frameloader(array_t<string_t> files)
+        : current_(0)
+    {
+        for (auto& name : files) {
             fits fits_file(name);
 
-            fits::image_hdu image
-                = std::get<fits::image_hdu>(fits_file.hdus[0]);
-
-            images_.push_back(image);
+            fits::image_hdu hdu = std::get<fits::image_hdu>(fits_file.hdus[0]);
+            hdus_.emplace_back(hdu);
         }
 
-        fits reference(reference_image_name_);
-        reference_image_ = std::get<fits::image_hdu>(reference.hdus[0]);
-
-        cards_ = reference.get_cards();
-        cards_.erase(cards_.begin(), cards_.begin() + 8);
-
-        input_axes_   = reference_image_.naxes;
-        input_bitpix_ = reference_image_.bitpix;
+        for (auto& hdu : hdus_) {
+            frames_.emplace_back(hdu.data, hdu.naxes[0], hdu.naxes[1]);
+        }
     }
 
-    void create_output_image()
+    bool has_more() override
     {
-        output_axes_   = input_axes_;
-        output_bitpix_ = input_bitpix_;
-
-        result_image_        = fits::image_hdu(output_axes_);
-        result_image_.bitpix = output_bitpix_ * 2;
+        return current_ < frames_.size();
     }
 
-    void summ_images(std::vector<std::pair<vector_t, vector_t>> models)
+    virtual frame get_frame() override
+    {
+        auto current = current_;
+        ++current_;
+        return frames_[current];
+    }
+
+private:
+    array_t<fits::image_hdu> hdus_;
+    array_t<frame> frames_;
+    unsigned_integer_t current_;
+};
+
+class isumattor {
+public:
+    virtual void sum(frame) = 0;
+    virtual frame result()  = 0;
+};
+
+class basic_star_sumattor : public isumattor {
+public:
+    basic_star_sumattor(
+        std::vector<std::pair<vector_t, vector_t>> models, frame base_frame)
+        : base_frame_(base_frame)
+        , current_(0)
+        , models_(models)
+    {
+        std::fill(base_frame_.data().begin(), base_frame_.data().end(), 0);
+    }
+
+    virtual void sum(frame fr)
     {
         uint32_t threads = 8;
         threadpool pool(threads);
 
-        long w = output_axes_[0];
-        long h = output_axes_[1];
+        long w = fr.x_size();
+        long h = fr.y_size();
 
-        for (size_t shot = 0; shot < images_.size(); ++shot) {
-            pool.run_parallel_works(
-                [w, h, shot, threads, this, &models](size_t thr) {
-                    auto [Zx, Zy] = models[shot];
-                    auto& image   = images_[shot];
+        auto model = models_[current_];
+        ++current_;
 
-                    long size  = w / threads;
-                    long begin = size * thr;
-                    if (thr == threads - 1) {
-                        size += w % size;
-                    }
+        pool.run_parallel_works(
+            [w, h, threads, this, &model, frame = fr](size_t thr) mutable {
+                auto [Zx, Zy] = model;
 
-                    for (long i = begin; i < size + begin; ++i) {
-                        for (long j = 0; j < h; ++j) {
-                            long x = transform_pixel(i, j, Zx);
-                            long y = transform_pixel(i, j, Zy);
+                long size  = w / threads;
+                long begin = size * thr;
+                if (thr == threads - 1) {
+                    size += w % size;
+                }
 
-                            if (x < 0 || y < 0) {
-                                continue;
-                            }
+                for (long i = begin; i < size + begin; ++i) {
+                    for (long j = 0; j < h; ++j) {
+                        long x = transform_pixel(i, j, Zx);
+                        long y = transform_pixel(i, j, Zy);
 
-                            if (x >= w || y >= h) {
-                                continue;
-                            }
-
-                            result_image_(i, j) += image(x, y);
+                        if (x < 0 || y < 0) {
+                            continue;
                         }
+
+                        if (x >= w || y >= h) {
+                            continue;
+                        }
+
+                        base_frame_[i, j] += frame[x, y];
                     }
-                });
-        }
+                }
+            });
     }
 
-    void write_result_image_()
+    virtual frame result()
     {
-        auto hdus = std::vector<fits::hdu> { result_image_ };
-        fits fits_out("out.fits", hdus, cards_);
+        return base_frame_;
     }
 
 private:
@@ -126,19 +219,9 @@ private:
         return { x1, x2 };
     }
 
-    std::string reference_image_name_;
-    std::vector<std::string> input_images_names_;
-    std::vector<fits::image_hdu> images_;
-    fits::image_hdu reference_image_;
-
-    std::vector<std::string> cards_;
-    fits::image_hdu result_image_;
-    fits::image_hdu::axes_t input_axes_;
-    fits::image_hdu::axes_t output_axes_;
-    int input_bitpix_;
-    int output_bitpix_;
-
-    std::string output_name_;
+    frame base_frame_;
+    integer_t current_;
+    std::vector<std::pair<vector_t, vector_t>> models_;
 };
 
 std::pair<vector_t, vector_t> get_model(long n)
@@ -152,8 +235,29 @@ std::pair<vector_t, vector_t> get_model(long n)
     for (long i = 0; i < n; ++i) {
         std::cin >> Zy[i];
     }
-
     return { Zx, Zy };
+}
+
+static void sum_images(std::vector<std::string> images)
+{
+    std::vector<std::pair<vector_t, vector_t>> models;
+    for (unsigned long i = 0; i < images.size(); ++i) {
+        models.push_back(get_model(3));
+    }
+
+    sptr<iframeloader> frameloader = make_sptr<batch_frameloader>(images);
+
+    frame base_frame = frameloader->get_frame();
+
+    sptr<iframesaver> framesaver = make_sptr<casual_framesaver>("out.fits");
+    sptr<isumattor> sumattor
+        = make_sptr<basic_star_sumattor>(models, base_frame);
+
+    while (frameloader->has_more()) {
+        sumattor->sum(frameloader->get_frame());
+    }
+
+    framesaver->save(sumattor->result());
 }
 
 int main(int, char* argv[])
@@ -161,24 +265,12 @@ int main(int, char* argv[])
     std::string reference_image = argv[1];
     long images_count           = std::stoll(argv[2]);
     std::vector<std::string> images;
+    images.push_back(reference_image);
     for (long i = 0; i < images_count; ++i) {
         images.push_back(argv[3 + i]);
     }
 
-    std::vector<std::pair<vector_t, vector_t>> models;
-    for (long i = 0; i < images_count; ++i) {
-        models.push_back(get_model(3));
-    }
-
-    if (models.size() != images.size()) {
-        throw std::runtime_error("Wrong");
-    }
-
-    pipeline pipeline(reference_image, images, "out.fits");
-    pipeline.read_inputs();
-    pipeline.create_output_image();
-    pipeline.summ_images(models);
-    pipeline.write_result_image_();
+    sum_images(images);
 
     return 0;
 }
