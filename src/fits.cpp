@@ -6,9 +6,8 @@
 #include <variant>
 #include <vector>
 
+#include "types.hpp"
 #include "variant_utils.hpp"
-
-#include "fitsio.h"
 
 // Read fits
 fits::fits(const std::string& file)
@@ -85,7 +84,7 @@ void fits::create_image_hdu(image_hdu& image)
     fits_create_img(fptr_, image.bitpix, naxis, image.naxes.data(), &status_);
     throw_fits_exception_if_needed();
 
-    image_hdu::axes_t fpixel(naxis);
+    index_array_t fpixel(naxis);
     std::fill(fpixel.begin(), fpixel.end(), 1);
 
     long nelements = std::accumulate(
@@ -125,11 +124,11 @@ void fits::load_current_hdu(int hdui [[maybe_unused]], int hdutype)
             throw std::runtime_error("Unsupported");
         }
 
-        image_hdu::axes_t naxes(naxis);
+        index_array_t naxes(naxis);
         fits_get_img_size(fptr_, naxis, naxes.data(), &status_);
         throw_fits_exception_if_needed();
 
-        image_hdu::axes_t fpixel(naxis);
+        index_array_t fpixel(naxis);
         std::fill(fpixel.begin(), fpixel.end(), 1);
         long nelements = std::accumulate(
             naxes.begin(), naxes.end(), 1, std::multiplies<long>());

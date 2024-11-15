@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <sys/types.h>
+#include <span>
 #include <vector>
 
 template <typename T>
@@ -30,3 +30,9 @@ using string_t = std::string;
 
 using integer_t          = ssize_t;
 using unsigned_integer_t = size_t;
+
+using data_type_t   = unsigned long;
+using data_span_t   = std::span<data_type_t>;
+using data_t        = array_t<data_type_t>;
+using index_t       = long;
+using index_array_t = array_t<index_t>;

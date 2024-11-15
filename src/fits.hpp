@@ -1,38 +1,28 @@
 #pragma once
 
 #include <numeric>
-#include <span>
 #include <stdexcept>
 #include <variant>
 #include <vector>
 
 #include "fitsio.h"
-
 #include "types.hpp"
-
-using data_type_t   = unsigned long;
-using data_span_t   = std::span<data_type_t>;
-using data_t        = array_t<data_type_t>;
-using index_t       = long;
-using index_array_t = array_t<index_t>;
 
 class fits {
 public:
     struct image_hdu {
-        using dtype_t                      = unsigned long;
-        using dcontainer_t                 = std::vector<dtype_t>;
-        using axes_t                       = std::vector<long>;
+        using dcontainer_t                 = std::vector<data_type_t>;
         static constexpr int hdu_type_enum = IMAGE_HDU;
         static constexpr int dtype_enum    = TULONG;
 
         image_hdu() = default;
-        image_hdu(axes_t axes)
+        image_hdu(index_array_t axes)
             : naxes(axes)
             , data(std::accumulate(
                   naxes.begin(), naxes.end(), 1, std::multiplies<long>()))
         {
         }
-        image_hdu(int bitpix, axes_t naxes, dcontainer_t data)
+        image_hdu(int bitpix, index_array_t naxes, dcontainer_t data)
             : bitpix(bitpix)
             , naxes(naxes)
             , data(data)
@@ -40,10 +30,10 @@ public:
         }
 
         int bitpix { 64 };
-        axes_t naxes {};
+        index_array_t naxes {};
         dcontainer_t data {};
 
-        dtype_t& operator()(long x, long y)
+        data_type_t& operator()(long x, long y)
         {
             if (x >= naxes[0] || y >= naxes[1]) {
                 throw std::runtime_error("Out of bounds");
