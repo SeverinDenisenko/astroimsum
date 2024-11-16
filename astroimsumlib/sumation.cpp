@@ -46,7 +46,7 @@ namespace astro {
                             continue;
                         }
 
-                        base_frame_[i, j] += frame[x, y];
+                        base_frame_(i, j) += frame(x, y);
                     }
                 }
             });

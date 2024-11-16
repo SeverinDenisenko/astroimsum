@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
-#include <span>
 #include <vector>
 #include <string>
+
+#include "gsl/span"
 
 namespace astro {
     template <typename T>
@@ -33,8 +34,8 @@ namespace astro {
     using unsigned_integer_t = size_t;
 
     using data_type_t   = unsigned long;
-    using data_span_t   = std::span<data_type_t>;
     using data_t        = array_t<data_type_t>;
+    using data_span_t = gsl::span<data_type_t>;
     using index_t       = long;
     using index_array_t = array_t<index_t>;
 }

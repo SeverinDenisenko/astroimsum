@@ -8,6 +8,7 @@ namespace astro {
     public:
         virtual void sum(frame) = 0;
         virtual frame result()  = 0;
+        virtual ~isumattor() = default;
     };
 
     class basic_star_sumattor : public isumattor {

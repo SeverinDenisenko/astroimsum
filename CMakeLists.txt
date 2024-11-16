@@ -3,10 +3,11 @@ project(astroimsum VERSION 0.1.0 LANGUAGES CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(deps/cfitsio-4.5.0)
 add_subdirectory(deps/TRIANGLE)
+add_subdirectory(deps/GSL)
 find_package(Boost COMPONENTS thread REQUIRED)
 
 set(IMSUM_LIB_SRC
@@ -19,7 +20,7 @@ add_library(imsumlib ${IMSUM_LIB_SRC})
 
 target_compile_options(imsumlib PRIVATE -O3 -Wall -Wextra -pedantic)
 target_link_options(imsumlib PRIVATE)
-target_link_libraries(imsumlib PUBLIC ${Boost_LIBRARIES} cfitsio triangle)
+target_link_libraries(imsumlib PUBLIC ${Boost_LIBRARIES} cfitsio triangle GSL)
 target_include_directories(imsumlib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/include)
 
 set(IMSUM_SRC

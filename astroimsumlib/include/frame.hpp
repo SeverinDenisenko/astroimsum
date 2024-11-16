@@ -6,7 +6,7 @@ namespace astro {
     class frame {
     public:
         frame()
-            : data_((unsigned long*)nullptr, 0)
+            : data_(nullptr, nullptr)
             , x_size_(0)
             , y_size_(0)
         {
@@ -19,7 +19,7 @@ namespace astro {
         {
         }
 
-        data_type_t& operator[](index_t x, index_t y)
+        data_type_t& operator()(index_t x, index_t y)
         {
             return data_[y * x_size_ + x];
         }
