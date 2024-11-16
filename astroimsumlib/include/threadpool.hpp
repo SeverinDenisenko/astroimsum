@@ -5,30 +5,34 @@
 
 #include <boost/thread.hpp>
 
-class threadpool {
-public:
-    using work_t = std::function<void(long thr)>;
+#include "types.hpp"
 
-    threadpool(size_t threads)
-        : threads_count_(threads)
-    {
-        threads_.reserve(threads_count_);
-    }
+namespace astro {
+    class threadpool {
+    public:
+        using work_t = std::function<void(long thr)>;
 
-    void run_parallel_works(work_t work)
-    {
-        for (size_t i = 0; i < threads_count_; ++i) {
-            threads_.push_back(boost::thread([i, &work]() { work(i); }));
+        threadpool(size_t threads)
+            : threads_count_(threads)
+        {
+            threads_.reserve(threads_count_);
         }
 
-        for (boost::thread& thread : threads_) {
-            thread.join();
+        void run_parallel_works(work_t work)
+        {
+            for (size_t i = 0; i < threads_count_; ++i) {
+                threads_.push_back(boost::thread([i, &work]() { work(i); }));
+            }
+
+            for (boost::thread& thread : threads_) {
+                thread.join();
+            }
+
+            threads_.clear();
         }
 
-        threads_.clear();
-    }
-
-private:
-    std::vector<boost::thread> threads_;
-    size_t threads_count_;
-};
+    private:
+        array_t<boost::thread> threads_;
+        size_t threads_count_;
+    };
+}

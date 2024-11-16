@@ -2,6 +2,8 @@
 #include "source_extractor.hpp"
 #include "types.hpp"
 
+using namespace astro;
+
 int main()
 {
     source_extractor extractor;
