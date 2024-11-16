@@ -2,13 +2,16 @@
 
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/storage.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 
 namespace ublas = boost::numeric::ublas;
 
-using real_t   = double;
+using real_t   = float;
 using vector_t = ublas::vector<real_t>;
 using matrix_t = ublas::matrix<real_t>;
+
+using point_t = boost::numeric::ublas::bounded_array<real_t, 2>;
 
 template <typename T>
 int sgn(T val)
@@ -19,4 +22,9 @@ int sgn(T val)
 inline real_t dot(vector_t m, vector_t v)
 {
     return ublas::inner_prod(m, v);
+}
+
+inline real_t norm(vector_t v)
+{
+    return boost::numeric::ublas::norm_2(v);
 }

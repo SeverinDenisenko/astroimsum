@@ -2,27 +2,12 @@
 
 #include <functional>
 
+#include "linalg.hpp"
 #include "types.hpp"
 
-using real_t = float;
-
-struct coord_t {
-    real_t x;
-    real_t y;
-};
-
-using pixel_transform_t = std::function<coord_t(coord_t)>;
-
-class source_extractor {
-public:
-    array_t<coord_t> extract();
-};
+using pixel_transform_t = std::function<point_t(point_t)>;
 
 class source_matcher {
 public:
-    pixel_transform_t match(array_t<coord_t> from, array_t<coord_t> to);
-};
-
-class ireduction {
-public:
+    pixel_transform_t match(array_t<point_t> from, array_t<point_t> to);
 };

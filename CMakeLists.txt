@@ -12,7 +12,9 @@ find_package(Boost COMPONENTS thread REQUIRED)
 set(IMSUM_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/fits.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/frame_io.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/sumation.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/sumation.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source_extractor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/astrometric_reduction.cpp)
 add_executable(imsum ${IMSUM_SRC})
 target_compile_options(imsum PRIVATE -O3 -Wall -Wextra -pedantic )
 target_link_options(imsum PRIVATE )
