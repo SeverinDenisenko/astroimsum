@@ -6,6 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 23)
 
 add_subdirectory(deps/cfitsio-4.5.0)
+add_subdirectory(deps/TRIANGLE)
 find_package(Boost COMPONENTS thread REQUIRED)
 
 set(IMSUM_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
@@ -15,4 +16,4 @@ set(IMSUM_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 add_executable(imsum ${IMSUM_SRC})
 target_compile_options(imsum PRIVATE -O3 -Wall -Wextra -pedantic )
 target_link_options(imsum PRIVATE )
-target_link_libraries(imsum PUBLIC ${Boost_LIBRARIES} cfitsio)
+target_link_libraries(imsum PUBLIC ${Boost_LIBRARIES} cfitsio triangle)
