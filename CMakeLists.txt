@@ -18,7 +18,8 @@ set(IMSUM_LIB_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/frame_io.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/sumation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/source_extractor.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/astrometric_reduction.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/astrometric_reduction.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/delaney.cpp)
 add_library(imsumlib ${IMSUM_LIB_SRC})
 
 target_compile_options(imsumlib PRIVATE -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})

@@ -4,8 +4,8 @@
 #include "types.hpp"
 
 namespace astro {
-    class source_extractor {
-    public:
-        array_t<point_t> extract(string_t file);
-    };
+class source_extractor {
+public:
+    array_t<point_t> extract(string_t file);
+};
 }

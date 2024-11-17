@@ -76,10 +76,10 @@ inline void match(
                         Imin = i, Jmin = j, Kmin = k;
                         dmin = d;
                     } // end if
-                }     // end else
-            }         // end for k
-        }             // end for j
-    }                 // end for i
+                } // end else
+            } // end for k
+        } // end for j
+    } // end for i
     // printf("min = %d,%d,%d\n",Imin,Jmin,Kmin);
     TRI1[0] = ID1[3 * Imin];
     TRI1[1] = ID1[3 * Imin + 1];
