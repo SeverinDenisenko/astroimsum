@@ -20,7 +20,7 @@ set(IMSUM_LIB_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/source_extractor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/astrometric_reduction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/delaney.cpp)
-add_library(imsumlib ${IMSUM_LIB_SRC})
+add_library(imsumlib STATIC ${IMSUM_LIB_SRC})
 
 target_compile_options(imsumlib PRIVATE -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
 target_link_options(imsumlib PRIVATE ${COMMON_LINK_OPTIONS})
