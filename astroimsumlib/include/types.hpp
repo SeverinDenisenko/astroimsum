@@ -1,8 +1,10 @@
 #pragma once
 
+#include <cstddef>
 #include <memory>
 #include <vector>
 #include <string>
+#include <array>
 
 #include "gsl/span"
 
@@ -25,13 +27,16 @@ namespace astro {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
 
+    using integer_t          = ssize_t;
+    using unsigned_integer_t = size_t;
+
     template <typename T>
     using array_t = std::vector<T>;
 
-    using string_t = std::string;
+    template <typename T, unsigned_integer_t I>
+    using static_array_t = std::array<T, I>;
 
-    using integer_t          = ssize_t;
-    using unsigned_integer_t = size_t;
+    using string_t = std::string;
 
     using data_type_t   = unsigned long;
     using data_t        = array_t<data_type_t>;

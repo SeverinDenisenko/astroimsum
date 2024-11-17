@@ -208,14 +208,12 @@
 /*   recommend double precision unless you want to generate a mesh for which */
 /*   you do not have enough memory.                                          */
 
-/* #define SINGLE */
-
-#include "triangle.h"
+#define REAL float
 
 /* If yours is not a Unix system, define the NO_TIMER compiler switch to     */
 /*   remove the Unix-specific timing code.                                   */
 
-/* #define NO_TIMER */
+#define NO_TIMER
 
 /* To insert lots of self-checks for internal errors, define the SELF_CHECK  */
 /*   symbol.  This will slow down the program significantly.  It is best to  */
@@ -223,13 +221,13 @@
 /*   write "#define SELF_CHECK" below.  If you are modifying this code, I    */
 /*   recommend you turn self-checks on until your work is debugged.          */
 
-/* #define SELF_CHECK */
+// #define SELF_CHECK
 
 /* To compile Triangle as a callable object library (triangle.o), define the */
 /*   TRILIBRARY symbol.  Read the file triangle.h for details on how to call */
 /*   the procedure triangulate() that results.                               */
 
-/* #define TRILIBRARY */
+#define TRILIBRARY
 
 /* It is possible to generate a smaller version of Triangle using one or     */
 /*   both of the following symbols.  Define the REDUCED symbol to eliminate  */
@@ -241,8 +239,8 @@
 /*   generating an object library (triangle.o) by defining the TRILIBRARY    */
 /*   symbol.                                                                 */
 
-/* #define REDUCED */
-/* #define CDT_ONLY */
+// #define REDUCED
+// #define CDT_ONLY
 
 /* On some machines, my exact arithmetic routines might be defeated by the   */
 /*   use of internal extended precision floating-point registers.  The best  */
@@ -308,7 +306,7 @@
 /*   compiler is smarter, feel free to replace the "int" with "void".        */
 /*   Not that it matters.                                                    */
 
-#define VOID int
+#define VOID void
 
 /* Two constants for algorithms based on random sampling.  Both constants    */
 /*   have been chosen empirically to optimize their respective algorithms.   */
