@@ -27,10 +27,12 @@ batch_frameloader::batch_frameloader(array_t<string_t> files)
 
         fits::image_hdu hdu = std::get<fits::image_hdu>(fits_file.hdus[0]);
         hdus_.emplace_back(hdu);
-    }
 
-    for (auto& hdu : hdus_) {
-        frames_.emplace_back(hdu.data, hdu.naxes[0], hdu.naxes[1]);
+        frames_.emplace_back(
+            hdus_.back().data,
+            hdus_.back().naxes[0],
+            hdus_.back().naxes[1],
+            name);
     }
 }
 

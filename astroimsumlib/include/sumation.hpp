@@ -13,8 +13,7 @@ public:
 
 class basic_star_sumattor : public isumattor {
 public:
-    basic_star_sumattor(
-        array_t<std::pair<vector_t, vector_t>> models, frame base_frame);
+    basic_star_sumattor(frame base_frame);
 
     virtual void sum(frame fr);
 
@@ -27,6 +26,6 @@ private:
 
     frame base_frame_;
     integer_t current_;
-    array_t<std::pair<vector_t, vector_t>> models_;
+    array_t<point_t> base_frame_points_;
 };
 }

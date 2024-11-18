@@ -21,7 +21,7 @@ public:
     void run_parallel_works(work_t work)
     {
         for (size_t i = 0; i < threads_count_; ++i) {
-            threads_.push_back(boost::thread([i, &work]() { work(i); }));
+            threads_.emplace_back([i, &work]() { work(i); });
         }
 
         for (boost::thread& thread : threads_) {
