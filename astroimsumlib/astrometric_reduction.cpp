@@ -341,7 +341,7 @@ source_matcher::match(array_t<point_t> from, array_t<point_t> to)
     for (unsigned_integer_t i = 0; i <= n; i++) {
         for (unsigned_integer_t j = 0; j <= n; j++) {
             if (i + j <= n) {
-                for (unsigned_integer_t m = 0; m <= n; m++) {
+                for (unsigned_integer_t m = 0; m < x1.size(); m++) {
                     C(m, q) = pow(x1[m], i) * pow(y1[m], j);
                 }
                 q += 1;
@@ -374,7 +374,6 @@ source_matcher::match(array_t<point_t> from, array_t<point_t> to)
         rx = We * (x2 - C * Zx);
         ry = We * (y2 - C * Zy);
         vector_t r  = vector_sqrt(vector_pow(rx, 2) + vector_pow(ry, 2));
-        real_t rmax = max(r);
         real_t kmax = argmax(r);
         flag        = 1;
         if (size(x1) - it - Q <= Nmin) {
@@ -386,6 +385,9 @@ source_matcher::match(array_t<point_t> from, array_t<point_t> to)
             it += 1;
         }
     }
+
+    std::cout << Zx << std::endl;
+    std::cout << Zy << std::endl;
 
     vector_t uwex
         = vector_sqrt((transpose(matrix(rx)) * We) * rx / (x1.size() - it - Q));

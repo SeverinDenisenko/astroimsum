@@ -10,8 +10,8 @@ add_subdirectory(deps/TRIANGLE)
 add_subdirectory(deps/GSL)
 find_package(Boost COMPONENTS thread REQUIRED)
 
-set(COMMON_COMPILE_OPTIONS -O3)
-set(COMMON_LINK_OPTIONS )
+set(COMMON_COMPILE_OPTIONS -O3 -g)
+set(COMMON_LINK_OPTIONS)
 
 set(IMSUM_LIB_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/fits.cpp
