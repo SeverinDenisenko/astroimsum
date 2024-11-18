@@ -10,7 +10,6 @@ basic_star_sumattor::basic_star_sumattor(frame base_frame)
     : base_frame_(base_frame)
     , current_(0)
 {
-    std::fill(base_frame_.data().begin(), base_frame_.data().end(), 0);
     base_frame_points_ = source_extractor().extract(base_frame_.name());
 }
 
@@ -21,6 +20,9 @@ void basic_star_sumattor::sum(frame fr)
 
     long w = fr.x_size();
     long h = fr.y_size();
+
+    std::cout << "Generating transform from " << fr.name() << " to "
+              << base_frame_.name() << std::endl;
 
     array_t<point_t> to = source_extractor().extract(fr.name());
     pixel_transform_t transform
@@ -55,6 +57,8 @@ void basic_star_sumattor::sum(frame fr)
                 }
             }
         });
+
+    std::cout << "Frame " << fr.name() << " done" << std::endl;
 }
 
 frame basic_star_sumattor::result()

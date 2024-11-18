@@ -171,6 +171,24 @@ inline void overlap2(
     }
 }
 
+static real_t transform_pixel(real_t x, real_t y, vector_t Z)
+{
+    long Q = Z.size();
+    long n = 1;
+    long q = 0;
+
+    vector_t C(Q);
+    std::fill(C.begin(), C.end(), 1);
+    for (long i = 0; i <= n; ++i) {
+        for (long j = 0; j <= n - i; ++j) {
+            C[q] = pow(x, i) * pow(y, j);
+            q += 1;
+        }
+    }
+
+    return dot(C, Z);
+}
+
 pixel_transform_t
 source_matcher::match(array_t<point_t> from, array_t<point_t> to)
 {
@@ -313,8 +331,8 @@ source_matcher::match(array_t<point_t> from, array_t<point_t> to)
     // calibration
 
     C = matrix_t(x1.size(), Q);
-    for (unsigned_integer_t i = 0; i <= x1.size(); i++) {
-        for (unsigned_integer_t j = 0; j <= Q; j++) {
+    for (unsigned_integer_t i = 0; i < x1.size(); i++) {
+        for (unsigned_integer_t j = 0; j < Q; j++) {
             C(i, j) = 1;
         }
     }
@@ -332,8 +350,8 @@ source_matcher::match(array_t<point_t> from, array_t<point_t> to)
     }
 
     matrix_t We(x1.size(), x1.size());
-    for (unsigned_integer_t i = 0; i <= We.size1(); i++) {
-        for (unsigned_integer_t j = 0; j <= We.size2(); j++) {
+    for (unsigned_integer_t i = 0; i < We.size1(); i++) {
+        for (unsigned_integer_t j = 0; j < We.size2(); j++) {
             if (i == j) {
                 We(i, j) = 1;
             } else {
@@ -351,8 +369,8 @@ source_matcher::match(array_t<point_t> from, array_t<point_t> to)
     vector_t ry;
 
     while (flag == 0) {
-        Zx = inverse((transpose(C) * We) * C) * ((transpose(C), We) * x2);
-        Zy = inverse((transpose(C) * We) * C) * ((transpose(C), We) * y2);
+        Zx = inverse((transpose(C) * We) * C) * ((transpose(C) * We) * x2);
+        Zy = inverse((transpose(C) * We) * C) * ((transpose(C) * We) * y2);
         rx = We * (x2 - C * Zx);
         ry = We * (y2 - C * Zy);
         vector_t r  = vector_sqrt(vector_pow(rx, 2) + vector_pow(ry, 2));
@@ -379,9 +397,9 @@ source_matcher::match(array_t<point_t> from, array_t<point_t> to)
     // transform
 
     pixel_transform_t result = [Zx, Zy](point_t p) -> point_t {
-        point_t res;
-        res[0] = ::astro::transform(p[0], p[1], &Zx[0], 2);
-        res[1] = ::astro::transform(p[0], p[1], &Zy[0], 2);
+        point_t res(2);
+        res[0] = ::astro::transform_pixel(p[0], p[1], Zx);
+        res[1] = ::astro::transform_pixel(p[0], p[1], Zy);
         return res;
     };
 

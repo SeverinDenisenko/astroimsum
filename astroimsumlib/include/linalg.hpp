@@ -1,6 +1,9 @@
 #pragma once
 
 #include "types.hpp"
+
+#define BOOST_UBLAS_NDEBUG
+
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -84,12 +87,24 @@ inline vector_t vector_sqrt(vector_t a)
 
 inline real_t max(vector_t a)
 {
-    return *std::max(a.begin(), a.end());
+    real_t m = a[0];
+    for (unsigned_integer_t i = 0; i < a.size(); ++i) {
+        m = std::max(m, a[i]);
+    }
+    return m;
 }
 
 inline unsigned_integer_t argmax(vector_t a)
 {
-    return std::distance(a.begin(), std::max(a.begin(), a.end()));
+    real_t m             = a[0];
+    unsigned_integer_t r = 0;
+    for (unsigned_integer_t i = 0; i < a.size(); ++i) {
+        if (a[i] > m) {
+            m = a[i];
+            r = i;
+        }
+    }
+    return r;
 }
 
 inline matrix_t matrix(vector_t v)

@@ -10,7 +10,7 @@ add_subdirectory(deps/TRIANGLE)
 add_subdirectory(deps/GSL)
 find_package(Boost COMPONENTS thread REQUIRED)
 
-set(COMMON_COMPILE_OPTIONS -O0 -g)
+set(COMMON_COMPILE_OPTIONS -O3)
 set(COMMON_LINK_OPTIONS )
 
 set(IMSUM_LIB_SRC
@@ -46,3 +46,8 @@ add_executable(delaney_test ${CMAKE_CURRENT_SOURCE_DIR}/tests/delaney_test.cpp)
 target_link_libraries(delaney_test PUBLIC imsumlib)
 target_compile_options(delaney_test PRIVATE -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
 target_link_options(delaney_test PRIVATE ${COMMON_LINK_OPTIONS})
+
+add_executable(reduction_test ${CMAKE_CURRENT_SOURCE_DIR}/tests/reduction_test.cpp)
+target_link_libraries(reduction_test PUBLIC imsumlib)
+target_compile_options(reduction_test PRIVATE -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
+target_link_options(reduction_test PRIVATE ${COMMON_LINK_OPTIONS})
