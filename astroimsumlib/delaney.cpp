@@ -40,8 +40,8 @@ array_t<triangle_t> triangulate_points(array_t<point_t> points)
     out.trianglelist            = nullptr;
 
     // For debug
-    // char flags[] = { 'V', 'z', 'D', 0 };
-    char flags[] = { 'Q', 'z', 'D', 0 };
+    // char flags[] = { 'V', 'z', 0 };
+    char flags[] = { 'Q', 'z', 0 };
 
     triangulate(flags, &in, &out, nullptr);
 

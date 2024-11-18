@@ -12,10 +12,11 @@ public:
     {
     }
 
-    frame(data_t& data, index_t x_size, index_t y_size)
+    frame(data_t& data, index_t x_size, index_t y_size, string_t name)
         : data_(data.data(), data.size())
         , x_size_(x_size)
         , y_size_(y_size)
+        , name_(name)
     {
     }
 
@@ -44,9 +45,15 @@ public:
         return data_;
     }
 
+    string_t name() const
+    {
+        return name_;
+    }
+
 private:
     data_span_t data_;
     index_t x_size_;
     index_t y_size_;
+    string_t name_;
 };
 }

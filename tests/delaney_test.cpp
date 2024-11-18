@@ -14,5 +14,9 @@ int main()
 
     std::cout << indexes.size() << std::endl;
 
+    for(unsigned_integer_t i = 0; i < indexes.size(); ++i) {
+        std::cout << indexes[i][0] << " " << indexes[i][1] << " " << indexes[i][2] << std::endl;
+    }
+
     return 0;
 }
