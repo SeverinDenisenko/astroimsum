@@ -1,5 +1,7 @@
 # Astronomy imagery summation tool
 
+[![Builds](https://github.com/SeverinDenisenko/astroimsum/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/SeverinDenisenko/astroimsum/actions/workflows/cmake-multi-platform.yml)
+
 ## About
 
 This tool can add images (in .fits format) with stars on them. Tool computes proper transform frame to frame, to make all sourses line up together.
