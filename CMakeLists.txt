@@ -10,8 +10,19 @@ add_subdirectory(deps/TRIANGLE)
 add_subdirectory(deps/GSL)
 find_package(Boost COMPONENTS thread REQUIRED)
 
-set(COMMON_COMPILE_OPTIONS -O3 -g)
-set(COMMON_LINK_OPTIONS)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(COMMON_COMPILE_OPTIONS -O0 -g)
+    set(COMMON_LINK_OPTIONS)
+elseif(CMAKE_BUILD_TYPE STREQUAL "DebugASAN")
+    set(COMMON_COMPILE_OPTIONS -O0 -g -fsanitize=address)
+    set(COMMON_LINK_OPTIONS -fsanitize=address)
+elseif(CMAKE_BUILD_TYPE STREQUAL "DebugTSAN")
+    set(COMMON_COMPILE_OPTIONS -O0 -g -fsanitize=thread)
+    set(COMMON_LINK_OPTIONS -fsanitize=thread)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(COMMON_COMPILE_OPTIONS -O3)
+    set(COMMON_LINK_OPTIONS)
+endif()
 
 set(IMSUM_LIB_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/fits.cpp
