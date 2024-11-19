@@ -1,18 +1,32 @@
 #include "source_extractor.hpp"
+#include "types.hpp"
 
 #include <boost/process.hpp>
 #include <boost/process/pipe.hpp>
 
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 
 namespace astro {
 array_t<point_t> source_extractor::extract(string_t file)
 {
     namespace bp = boost::process;
 
+    array_t<string_t> names = { "sex", "sextractor", "source-extractor" };
+    string_t sex            = "";
+    for (string_t name : names) {
+        if (!system(("which " + name + " > /dev/null 2>&1").c_str())) {
+            sex = name;
+            break;
+        }
+    }
+    if (sex == "") {
+        throw std::runtime_error("Can't find sextractor");
+    }
+
     std::stringstream cmd;
-    cmd << "sex " << file << " -c "
+    cmd << sex << " " << file << " -c "
         << "config.sex";
 
     bp::ipstream stdout;
