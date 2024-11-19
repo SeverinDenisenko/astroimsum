@@ -45,6 +45,16 @@ jobs:
           brew install boost
         if: runner.os == 'macOS'
 
+      - name: Install Source extractor on Linux
+        shell: bash
+        run: sudo apt-get install sextractor
+        if: runner.os == 'Linux'
+
+      - name: Install Source extractor on MacOS
+        shell: bash
+        run: brew install sextractor
+        if: runner.os == 'macOS'
+
       - name: Set reusable strings
         id: strings
         shell: bash
@@ -61,6 +71,6 @@ jobs:
       - name: Build
         run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
-      - name: Test
-        working-directory: ${{ steps.strings.outputs.build-output-dir }}
-        run: ctest --build-config ${{ matrix.build_type }}
+      - name: Basic test
+        working-directory: ${{ github.workspace }}
+        run: ./scripts/run_basic_test.sh
