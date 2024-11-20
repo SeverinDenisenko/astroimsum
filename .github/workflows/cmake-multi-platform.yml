@@ -33,27 +33,26 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Boost on Linux
-        shell: bash
-        run: sudo apt-get install libboost-all-dev
-        if: runner.os == 'Linux'
-
-      - name: Install Boost on MacOS
+      - name: Install dependensies on MacOS
         shell: bash
         run: |
           brew upgrade
+          brew install clang-format
           brew install boost
+          brew install sextractor
         if: runner.os == 'macOS'
 
-      - name: Install Source extractor on Linux
+      - name: Install dependensies on Linux
         shell: bash
-        run: sudo apt-get install sextractor
+        run: |
+          sudo apt-get install libboost-all-dev
+          sudo apt-get install sextractor
         if: runner.os == 'Linux'
 
-      - name: Install Source extractor on MacOS
+      - name: Clang-format check
         shell: bash
-        run: brew install sextractor
-        if: runner.os == 'macOS'
+        run: |
+          clang-format --dry-run --Werror tests/*.cpp astroimsum/*.cpp astroimsumlib/*.cpp astroimsumlib/include/*.hpp
 
       - name: Set reusable strings
         id: strings
