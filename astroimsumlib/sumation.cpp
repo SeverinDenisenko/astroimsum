@@ -29,8 +29,12 @@ void basic_star_sumattor::sum(frame fr)
     array_t<point_t> to = source_extractor().extract(fr.name());
     std::cout << fr.name() << ": N = " << to.size() << std::endl;
 
-    pixel_transform_t transform
-        = source_matcher().match(base_frame_points_, to);
+    source_matcher matcher;
+
+    pixel_transform_t transform = matcher.match(base_frame_points_, to);
+
+    std::cout << matcher.get_transform_x() << std::endl;
+    std::cout << matcher.get_transform_y() << std::endl;
 
     pool.run_parallel_works(
         [w, h, threads, this, transform, frame = fr](size_t thr) mutable {

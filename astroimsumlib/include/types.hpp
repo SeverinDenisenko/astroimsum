@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "gsl/span"
@@ -43,4 +44,7 @@ using data_t        = array_t<data_type_t>;
 using data_span_t   = gsl::span<data_type_t>;
 using index_t       = long;
 using index_array_t = array_t<index_t>;
+
+template <typename T>
+using pair_t = std::pair<T, T>;
 }
