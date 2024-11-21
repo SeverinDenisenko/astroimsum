@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     using namespace astro;
 
     try {
-        if(argc < 3) {
+        if (argc < 3) {
             throw std::runtime_error("Wrong number of arguments");
         }
 
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
         array_t<string_t> images;
         images.push_back(reference_image);
         for (long i = 0; i < images_count; ++i) {
-            if(argc < i + 4) {
+            if (argc < i + 4) {
                 throw std::runtime_error("Wrong number of arguments");
             }
 
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
         }
 
         sum_images(images);
-    } catch(const std::exception& ex) {
+    } catch (const std::exception& ex) {
         std::cout << "Error: " << ex.what() << std::endl;
         return 1;
     }
