@@ -27,19 +27,32 @@ static void sum_images(array_t<string_t> images)
 }
 }
 
-int main(int, char* argv[])
+int main(int argc, char* argv[])
 {
     using namespace astro;
 
-    string_t reference_image = argv[1];
-    long images_count        = std::stoll(argv[2]);
-    array_t<string_t> images;
-    images.push_back(reference_image);
-    for (long i = 0; i < images_count; ++i) {
-        images.push_back(argv[3 + i]);
-    }
+    try {
+        if(argc < 3) {
+            throw std::runtime_error("Wrong number of arguments");
+        }
 
-    sum_images(images);
+        string_t reference_image = argv[1];
+        long images_count        = std::stoll(argv[2]);
+        array_t<string_t> images;
+        images.push_back(reference_image);
+        for (long i = 0; i < images_count; ++i) {
+            if(argc < i + 4) {
+                throw std::runtime_error("Wrong number of arguments");
+            }
+
+            images.push_back(argv[3 + i]);
+        }
+
+        sum_images(images);
+    } catch(const std::exception& ex) {
+        std::cout << "Error: " << ex.what() << std::endl;
+        return 1;
+    }
 
     return 0;
 }
