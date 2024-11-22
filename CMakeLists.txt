@@ -29,6 +29,8 @@ endif()
 
 add_subdirectory(astroimsumlib)
 
+add_subdirectory(c)
+
 add_subdirectory(astroimsum)
 
 add_subdirectory(tests)
