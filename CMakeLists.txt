@@ -22,6 +22,9 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "DebugTSAN")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(COMMON_COMPILE_OPTIONS -O3)
     set(COMMON_LINK_OPTIONS)
+else()
+    set(COMMON_COMPILE_OPTIONS -O3)
+    set(COMMON_LINK_OPTIONS)
 endif()
 
 set(IMSUM_LIB_SRC
@@ -31,12 +34,26 @@ set(IMSUM_LIB_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/source_extractor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/astrometric_reduction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/delaney.cpp)
-add_library(imsumlib STATIC ${IMSUM_LIB_SRC})
+add_library(imsumlib OBJECT ${IMSUM_LIB_SRC})
+set_property(TARGET imsumlib PROPERTY POSITION_INDEPENDENT_CODE 1)
 
-target_compile_options(imsumlib PRIVATE -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
-target_link_options(imsumlib PRIVATE ${COMMON_LINK_OPTIONS})
+target_compile_options(imsumlib PUBLIC -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
+target_link_options(imsumlib PUBLIC ${COMMON_LINK_OPTIONS})
 target_link_libraries(imsumlib PUBLIC ${Boost_LIBRARIES} cfitsio triangle GSL)
 target_include_directories(imsumlib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/include)
+
+add_library(imsumlib_shared SHARED $<TARGET_OBJECTS:imsumlib>)
+add_library(imsumlib_static STATIC $<TARGET_OBJECTS:imsumlib>)
+
+target_compile_options(imsumlib_shared PUBLIC -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
+target_link_options(imsumlib_shared PUBLIC ${COMMON_LINK_OPTIONS})
+target_link_libraries(imsumlib_shared PUBLIC ${Boost_LIBRARIES} cfitsio triangle GSL)
+target_include_directories(imsumlib_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/include)
+
+target_compile_options(imsumlib_static PUBLIC -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
+target_link_options(imsumlib_static PUBLIC ${COMMON_LINK_OPTIONS})
+target_link_libraries(imsumlib_static PUBLIC ${Boost_LIBRARIES} cfitsio triangle GSL)
+target_include_directories(imsumlib_static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/astroimsumlib/include)
 
 set(IMSUM_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/astroimsum/main.cpp)
@@ -44,21 +61,21 @@ add_executable(imsum ${IMSUM_SRC})
 
 target_compile_options(imsum PRIVATE -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
 target_link_options(imsum PRIVATE ${COMMON_LINK_OPTIONS})
-target_link_libraries(imsum PUBLIC imsumlib)
+target_link_libraries(imsum PUBLIC imsumlib_static)
 
 # tests
 
 add_executable(source_extractor_test ${CMAKE_CURRENT_SOURCE_DIR}/tests/source_extractor_test.cpp)
-target_link_libraries(source_extractor_test PUBLIC imsumlib)
+target_link_libraries(source_extractor_test PUBLIC imsumlib_static)
 target_compile_options(source_extractor_test PRIVATE -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
 target_link_options(source_extractor_test PRIVATE ${COMMON_LINK_OPTIONS})
 
 add_executable(delaney_test ${CMAKE_CURRENT_SOURCE_DIR}/tests/delaney_test.cpp)
-target_link_libraries(delaney_test PUBLIC imsumlib)
+target_link_libraries(delaney_test PUBLIC imsumlib_static)
 target_compile_options(delaney_test PRIVATE -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
 target_link_options(delaney_test PRIVATE ${COMMON_LINK_OPTIONS})
 
 add_executable(reduction_test ${CMAKE_CURRENT_SOURCE_DIR}/tests/reduction_test.cpp)
-target_link_libraries(reduction_test PUBLIC imsumlib)
+target_link_libraries(reduction_test PUBLIC imsumlib_static)
 target_compile_options(reduction_test PRIVATE -Wall -Wextra -pedantic ${COMMON_COMPILE_OPTIONS})
 target_link_options(reduction_test PRIVATE ${COMMON_LINK_OPTIONS})
