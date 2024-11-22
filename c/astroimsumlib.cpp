@@ -10,7 +10,7 @@ using namespace astro;
 struct astroimsum { };
 
 struct astroimsum_frame {
-    frame frame;
+    frame astro_frame;
     uptr<iframeloader> frameloader;
 };
 
@@ -59,7 +59,7 @@ int astroimsum_create_frame(
         string_t name(name_in);
         array_t<string_t> names { name };
         (*frame_out)->frameloader = make_uptr<batch_frameloader>(names);
-        (*frame_out)->frame       = (*frame_out)->frameloader->get_frame();
+        (*frame_out)->astro_frame = (*frame_out)->frameloader->get_frame();
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         res = 1;
@@ -78,9 +78,9 @@ int astroimsum_access_frame(
     int res = 0;
 
     try {
-        *width_out  = frame_in->frame.x_size();
-        *height_out = frame_in->frame.y_size();
-        *data_out   = frame_in->frame.data().data();
+        *width_out  = frame_in->astro_frame.x_size();
+        *height_out = frame_in->astro_frame.y_size();
+        *data_out   = frame_in->astro_frame.data().data();
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         res = 1;
@@ -97,7 +97,7 @@ int astroimsum_destroy_frame(
 
     try {
         frame_in->frameloader = nullptr;
-        frame_in->frame       = frame();
+        frame_in->astro_frame = frame();
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         res = 1;
@@ -116,7 +116,7 @@ int astroimsum_write_frame(
     try {
         string_t name(name_in);
         sptr<iframesaver> framesaver = make_sptr<casual_framesaver>(name);
-        framesaver->save(frame_in->frame);
+        framesaver->save(frame_in->astro_frame);
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         res = 1;
@@ -134,9 +134,9 @@ int astroimsum_add_frames(
 
     try {
         sptr<isumattor> sumattor
-            = make_sptr<basic_star_sumattor>(add_to->frame);
-        sumattor->sum(add_what->frame);
-        add_to->frame = sumattor->result();
+            = make_sptr<basic_star_sumattor>(add_to->astro_frame);
+        sumattor->sum(add_what->astro_frame);
+        add_to->astro_frame = sumattor->result();
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         res = 1;
