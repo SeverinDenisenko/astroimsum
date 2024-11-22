@@ -3,7 +3,7 @@
 echo $PWD
 ls $PWD
 ls ./data
-./build/imsum "$PWD"/data/2015_HB10_H_alpha_005.fits 9 \
+./build/astroimsum/imsum "$PWD"/data/2015_HB10_H_alpha_005.fits 9 \
     "$PWD"/data/2015_HB10_H_alpha_001.fits \
     "$PWD"/data/2015_HB10_H_alpha_002.fits \
     "$PWD"/data/2015_HB10_H_alpha_003.fits \
