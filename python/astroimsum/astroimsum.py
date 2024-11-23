@@ -1,4 +1,5 @@
 import ctypes
+from glob import glob
 
 class astroimsum_handle(ctypes.Structure):
     pass
@@ -7,8 +8,11 @@ class astroimsum_handle(ctypes.Structure):
 class astroimsum_frame_handle(ctypes.Structure):
     pass
 
+_libs = glob("build/c/libimsumlib_c.*")
+if(len(_libs) != 1):
+    raise Exception("Can't find libimsumlib_c shared library")
 
-_astroimsum = ctypes.CDLL("build/c/libimsumlib_c.dylib")
+_astroimsum = ctypes.CDLL(_libs[0])
 _astroimsum.astroimsum_init.argtypes = (
     ctypes.POINTER(ctypes.POINTER(astroimsum_handle)),
 )
