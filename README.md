@@ -21,7 +21,7 @@ This command adds other images to base image and results in out.fits.
 Example (jupiter notebook):
 
 ```Python
-from python.astroimsum import astroimsum
+from pyastroimsumlib import astroimsum
 
 frames = glob("path_to_frames/*.fits")
 
