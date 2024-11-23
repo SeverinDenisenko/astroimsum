@@ -8,5 +8,5 @@ target_link_libraries(astroimsumlib_c PRIVATE imsumlib_static)
 target_include_directories(astroimsumlib_c PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_custom_command(TARGET astroimsumlib_c POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:astroimsumlib_c> ${CMAKE_CURRENT_SOURCE_DIR}/../python/astroimsum
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:astroimsumlib_c> ${CMAKE_CURRENT_SOURCE_DIR}/../pyastroimsumlib
 )
