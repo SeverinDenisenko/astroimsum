@@ -5,9 +5,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(deps/cfitsio-4.5.0)
-add_subdirectory(deps/TRIANGLE)
-add_subdirectory(deps/GSL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/cfitsio-4.5.0)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/TRIANGLE)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/GSL)
 find_package(Boost COMPONENTS thread REQUIRED)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -29,7 +29,7 @@ endif()
 
 add_subdirectory(astroimsumlib)
 
-add_subdirectory(c)
+add_subdirectory(astroimsumlib_c)
 
 add_subdirectory(astroimsum)
 
