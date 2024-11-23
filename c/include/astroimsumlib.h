@@ -35,10 +35,11 @@ int astroimsum_write_frame(
 
 /*
  * Main routine for frame summation
+ * Result is placed in base frame
  */
-int astroimsum_add_frames(
-    struct astroimsum* handle_in,
-    struct astroimsum_frame* add_to,
-    struct astroimsum_frame* add_what);
+int astroimsum_set_base_frame(
+    struct astroimsum* handle_in, struct astroimsum_frame* frame_in);
+int astroimsum_add_frame(
+    struct astroimsum* handle_in, struct astroimsum_frame* frame_in);
 
 #endif // ASTROIMSUMLIB_H

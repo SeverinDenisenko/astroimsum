@@ -7,7 +7,9 @@
 
 using namespace astro;
 
-struct astroimsum { };
+struct astroimsum {
+    uptr<isumattor> sumattor;
+};
 
 struct astroimsum_frame {
     frame astro_frame;
@@ -96,8 +98,7 @@ int astroimsum_destroy_frame(
     int res = 0;
 
     try {
-        frame_in->frameloader = nullptr;
-        frame_in->astro_frame = frame();
+        delete frame_in;
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         res = 1;
@@ -125,18 +126,29 @@ int astroimsum_write_frame(
     return res;
 }
 
-int astroimsum_add_frames(
-    struct astroimsum* handle_in [[maybe_unused]],
-    struct astroimsum_frame* add_to,
-    struct astroimsum_frame* add_what)
+int astroimsum_set_base_frame(
+    struct astroimsum* handle_in, struct astroimsum_frame* frame_in)
 {
     int res = 0;
 
     try {
-        sptr<isumattor> sumattor
-            = make_sptr<basic_star_sumattor>(add_to->astro_frame);
-        sumattor->sum(add_what->astro_frame);
-        add_to->astro_frame = sumattor->result();
+        handle_in->sumattor
+            = make_uptr<basic_star_sumattor>(frame_in->astro_frame);
+    } catch (const std::exception& ex) {
+        std::cerr << ex.what() << std::endl;
+        res = 1;
+    }
+
+    return res;
+}
+
+int astroimsum_add_frame(
+    struct astroimsum* handle_in, struct astroimsum_frame* frame_in)
+{
+    int res = 0;
+
+    try {
+        handle_in->sumattor->sum(frame_in->astro_frame);
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         res = 1;
