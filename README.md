@@ -5,6 +5,7 @@
 ## About
 
 ![example](data/example.png)
+![example](data/example2.png)
 
 This tool can add images (in .fits format) with stars on them. Tool computes proper transform frame to frame, to make all sourses line up together.
 
