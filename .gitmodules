@@ -1,3 +1,6 @@
 [submodule "deps/GSL"]
 	path = deps/GSL
 	url = https://github.com/microsoft/GSL.git
+[submodule "astrometry.net"]
+	path = astrometrynet
+	url = https://github.com/SeverinDenisenko/astrometry.net.git
