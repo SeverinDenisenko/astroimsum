@@ -1,5 +1,8 @@
 import ctypes
-from . import _astroimsum_dir
+from typing import Any
+
+from . import astroimsum_dir
+
 
 class astroimsum_handle(ctypes.Structure):
     pass
@@ -8,7 +11,8 @@ class astroimsum_handle(ctypes.Structure):
 class astroimsum_frame_handle(ctypes.Structure):
     pass
 
-_astroimsum = ctypes.CDLL(_astroimsum_dir)
+
+_astroimsum = ctypes.CDLL(astroimsum_dir)
 _astroimsum.astroimsum_init.argtypes = (
     ctypes.POINTER(ctypes.POINTER(astroimsum_handle)),
 )
@@ -43,18 +47,19 @@ _astroimsum.astroimsum_add_frame.argtypes = (
     ctypes.POINTER(astroimsum_frame_handle),
 )
 
+
 class astroimsum:
     def __init__(self) -> None:
         self.handle = ctypes.POINTER(astroimsum_handle)()
         _astroimsum.astroimsum_init(ctypes.byref(self.handle))
 
-    def load_frame(self, name: str):
+    def load_frame(self, name: str) -> Any:
         return frame(self, name)
 
-    def set_base_frame(self, frame):
+    def set_base_frame(self, frame: Any) -> None:
         _astroimsum.astroimsum_set_base_frame(self.handle, frame.handle)
 
-    def add_frame(self, frame):
+    def add_frame(self, frame: Any) -> None:
         _astroimsum.astroimsum_add_frame(self.handle, frame.handle)
 
     def __del__(self) -> None:
