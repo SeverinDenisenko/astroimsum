@@ -89,7 +89,7 @@ inline vector_t vector_sqrt(vector_t a)
 
 inline real_t max(vector_t a)
 {
-    if(a.empty()) {
+    if (a.empty()) {
         throw std::runtime_error("max: vector is empty");
     }
     real_t m = a[0];
@@ -101,7 +101,7 @@ inline real_t max(vector_t a)
 
 inline unsigned_integer_t argmax(vector_t a)
 {
-    if(a.empty()) {
+    if (a.empty()) {
         throw std::runtime_error("argmax: vector is empty");
     }
     real_t m             = a[0];
