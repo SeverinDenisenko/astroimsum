@@ -1,11 +1,11 @@
 #include "fits.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <numeric>
 #include <stdexcept>
 #include <variant>
 #include <vector>
-#include <iostream>
 
 #include "types.hpp"
 #include "variant_utils.hpp"
@@ -80,7 +80,12 @@ void fits::create_hdus(array_t<hdu>& hdus)
 void fits::create_image_hdu(image_hdu& image)
 {
     long naxis = image.naxes.size();
-    fits_create_img(fptr_, fits::image_hdu::dtype_bitpix, naxis, image.naxes.data(), &status_);
+    fits_create_img(
+        fptr_,
+        fits::image_hdu::dtype_bitpix,
+        naxis,
+        image.naxes.data(),
+        &status_);
     throw_fits_exception_if_needed();
 
     index_array_t fpixel(naxis);
