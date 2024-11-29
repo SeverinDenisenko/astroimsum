@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 #include "types.hpp"
 
 #define BOOST_UBLAS_NDEBUG
@@ -87,6 +89,9 @@ inline vector_t vector_sqrt(vector_t a)
 
 inline real_t max(vector_t a)
 {
+    if (a.empty()) {
+        throw std::runtime_error("max: vector is empty");
+    }
     real_t m = a[0];
     for (unsigned_integer_t i = 0; i < a.size(); ++i) {
         m = std::max(m, a[i]);
@@ -96,6 +101,9 @@ inline real_t max(vector_t a)
 
 inline unsigned_integer_t argmax(vector_t a)
 {
+    if (a.empty()) {
+        throw std::runtime_error("argmax: vector is empty");
+    }
     real_t m             = a[0];
     unsigned_integer_t r = 0;
     for (unsigned_integer_t i = 0; i < a.size(); ++i) {

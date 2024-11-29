@@ -26,12 +26,12 @@ fits::fits(const string_t& file, array_t<hdu>& hdus, array_t<string_t> cards)
     fits_create_file(&fptr_, file.c_str(), &status_);
     throw_fits_exception_if_needed();
 
+    create_hdus(hdus);
+
     for (auto& card : cards) {
         fits_write_record(fptr_, card.c_str(), &status_);
         throw_fits_exception_if_needed();
     }
-
-    create_hdus(hdus);
 };
 
 fits::~fits()

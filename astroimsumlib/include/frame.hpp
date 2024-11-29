@@ -9,14 +9,21 @@ public:
         : data_(nullptr, nullptr)
         , x_size_(0)
         , y_size_(0)
+        , cards_()
     {
     }
 
-    frame(data_t& data, index_t x_size, index_t y_size, string_t name)
+    frame(
+        data_t& data,
+        index_t x_size,
+        index_t y_size,
+        string_t name,
+        array_t<string_t> cards)
         : data_(data.data(), data.size())
         , x_size_(x_size)
         , y_size_(y_size)
         , name_(name)
+        , cards_(cards)
     {
     }
 
@@ -50,10 +57,16 @@ public:
         return name_;
     }
 
+    array_t<string_t> cards() const
+    {
+        return cards_;
+    }
+
 private:
     data_span_t data_;
     index_t x_size_;
     index_t y_size_;
     string_t name_;
+    array_t<string_t> cards_;
 };
 }

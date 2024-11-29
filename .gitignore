@@ -2,4 +2,5 @@
 build
 list.cat
 result.fits
+out.fits
 venv

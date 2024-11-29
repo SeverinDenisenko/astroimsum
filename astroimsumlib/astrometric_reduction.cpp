@@ -4,6 +4,7 @@
 #include "linalg.hpp"
 #include "types.hpp"
 #include <cstddef>
+#include <limits>
 
 namespace astro {
 
@@ -32,33 +33,38 @@ pair_t<triangle_t> source_matcher::match(
                     { 1, 2, 0 }, { 2, 0, 1 }, { 2, 1, 0 } };
 
     int Imin = 0, Jmin = 0, Kmin = 0;
-    float d, dmin;
+    float dmin = std::numeric_limits<float>::max();
+
     for (unsigned_integer_t i = 0; i < from_tris.size(); i++) {
-        int I = from_tris[i][0];
-        int J = from_tris[i][1];
-        int K = from_tris[i][2];
+        unsigned_integer_t I = from_tris[i][0];
+        unsigned_integer_t J = from_tris[i][1];
+        unsigned_integer_t K = from_tris[i][2];
+
+        if (I >= to.size() || J >= to.size() || K >= to.size()) {
+            continue;
+        }
 
         static_array_t<float, 3> trp1 = triangle(from[I], from[J], from[K]);
 
         for (unsigned_integer_t j = 0; j < to_tris.size(); j++) {
             for (int k = 0; k < 6; k++) {
-                int I = to_tris[j][Q[k][0]];
-                int J = to_tris[j][Q[k][1]];
-                int K = to_tris[j][Q[k][2]];
+                unsigned_integer_t I = to_tris[j][Q[k][0]];
+                unsigned_integer_t J = to_tris[j][Q[k][1]];
+                unsigned_integer_t K = to_tris[j][Q[k][2]];
+
+                if (I >= from.size() || J >= from.size() || K >= from.size()) {
+                    continue;
+                }
 
                 static_array_t<float, 3> trp2 = triangle(to[I], to[J], to[K]);
 
-                d = (trp1[0] - trp2[0]) * (trp1[0] - trp2[0])
+                float d = (trp1[0] - trp2[0]) * (trp1[0] - trp2[0])
                     + (trp1[1] - trp2[1]) * (trp1[1] - trp2[1])
                     + (trp1[2] - trp2[2]) * (trp1[2] - trp2[2]);
 
-                if ((i == 0) && (j == 0) && (k == 0))
+                if (d < dmin) {
+                    Imin = i, Jmin = j, Kmin = k;
                     dmin = d;
-                else {
-                    if (d < dmin) {
-                        Imin = i, Jmin = j, Kmin = k;
-                        dmin = d;
-                    }
                 }
             }
         }
