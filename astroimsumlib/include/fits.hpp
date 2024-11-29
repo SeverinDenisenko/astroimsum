@@ -14,7 +14,8 @@ public:
     struct image_hdu {
         using dcontainer_t                 = array_t<data_type_t>;
         static constexpr int hdu_type_enum = IMAGE_HDU;
-        static constexpr int dtype_enum    = TULONG;
+        static constexpr int dtype_enum    = TDOUBLE;
+        static constexpr int dtype_bitpix  = DOUBLE_IMG;
 
         image_hdu() = default;
         image_hdu(index_array_t axes)
@@ -23,14 +24,12 @@ public:
                   naxes.begin(), naxes.end(), 1, std::multiplies<long>()))
         {
         }
-        image_hdu(int bitpix, index_array_t naxes, dcontainer_t data)
-            : bitpix(bitpix)
-            , naxes(naxes)
+        image_hdu(index_array_t naxes, dcontainer_t data)
+            : naxes(naxes)
             , data(data)
         {
         }
 
-        int bitpix { 64 };
         index_array_t naxes {};
         dcontainer_t data {};
 

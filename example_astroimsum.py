@@ -7,7 +7,7 @@ from pyastroimsumlib import astroimsum
 
 frames = glob("./data/2015_HB10_H_alpha_*.fits")
 
-base_frame_index = len(frames) // 2 - 1
+base_frame_index = len(frames) // 2
 base_frame = frames[base_frame_index]
 other_frames = frames[:base_frame_index] + frames[base_frame_index + 1 :]
 

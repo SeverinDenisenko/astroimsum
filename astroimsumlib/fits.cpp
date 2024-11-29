@@ -1,6 +1,7 @@
 #include "fits.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <numeric>
 #include <stdexcept>
 #include <variant>
@@ -25,12 +26,12 @@ fits::fits(const string_t& file, array_t<hdu>& hdus, array_t<string_t> cards)
     fits_create_file(&fptr_, file.c_str(), &status_);
     throw_fits_exception_if_needed();
 
-    create_hdus(hdus);
-
     for (auto& card : cards) {
         fits_write_record(fptr_, card.c_str(), &status_);
         throw_fits_exception_if_needed();
     }
+
+    create_hdus(hdus);
 };
 
 fits::~fits()
@@ -79,7 +80,12 @@ void fits::create_hdus(array_t<hdu>& hdus)
 void fits::create_image_hdu(image_hdu& image)
 {
     long naxis = image.naxes.size();
-    fits_create_img(fptr_, image.bitpix, naxis, image.naxes.data(), &status_);
+    fits_create_img(
+        fptr_,
+        fits::image_hdu::dtype_bitpix,
+        naxis,
+        image.naxes.data(),
+        &status_);
     throw_fits_exception_if_needed();
 
     index_array_t fpixel(naxis);
@@ -142,7 +148,7 @@ void fits::load_current_hdu(int hdui [[maybe_unused]], int hdutype)
             &status_);
         throw_fits_exception_if_needed();
 
-        curr_hdu = image_hdu(bitpix, naxes, data);
+        curr_hdu = image_hdu(naxes, data);
     } else if (hdutype == ASCII_TBL) {
         curr_hdu = ascii_hdu {};
         throw std::runtime_error("Unsupported");

@@ -27,7 +27,7 @@ _astroimsum.astroimsum_access_frame.argtypes = (
     ctypes.POINTER(astroimsum_frame_handle),
     ctypes.POINTER(ctypes.c_int),
     ctypes.POINTER(ctypes.c_int),
-    ctypes.POINTER(ctypes.POINTER(ctypes.c_float)),
+    ctypes.POINTER(ctypes.POINTER(ctypes.c_double)),
 )
 _astroimsum.astroimsum_destroy_frame.argtypes = (
     ctypes.POINTER(astroimsum_handle),

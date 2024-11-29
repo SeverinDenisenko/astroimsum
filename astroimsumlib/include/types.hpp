@@ -39,7 +39,7 @@ using static_array_t = std::array<T, I>;
 
 using string_t = std::string;
 
-using data_type_t   = unsigned long;
+using data_type_t   = double;
 using data_t        = array_t<data_type_t>;
 using data_span_t   = gsl::span<data_type_t>;
 using index_t       = long;
