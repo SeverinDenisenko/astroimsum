@@ -36,17 +36,25 @@ pair_t<triangle_t> source_matcher::match(
     float dmin = std::numeric_limits<float>::max();
 
     for (unsigned_integer_t i = 0; i < from_tris.size(); i++) {
-        int I = from_tris[i][0];
-        int J = from_tris[i][1];
-        int K = from_tris[i][2];
+        unsigned_integer_t I = from_tris[i][0];
+        unsigned_integer_t J = from_tris[i][1];
+        unsigned_integer_t K = from_tris[i][2];
+
+        if (I >= to.size() || J >= to.size() || K >= to.size()) {
+            continue;
+        }
 
         static_array_t<float, 3> trp1 = triangle(from[I], from[J], from[K]);
 
         for (unsigned_integer_t j = 0; j < to_tris.size(); j++) {
             for (int k = 0; k < 6; k++) {
-                int I = to_tris[j][Q[k][0]];
-                int J = to_tris[j][Q[k][1]];
-                int K = to_tris[j][Q[k][2]];
+                unsigned_integer_t I = to_tris[j][Q[k][0]];
+                unsigned_integer_t J = to_tris[j][Q[k][1]];
+                unsigned_integer_t K = to_tris[j][Q[k][2]];
+
+                if (I >= from.size() || J >= from.size() || K >= from.size()) {
+                    continue;
+                }
 
                 static_array_t<float, 3> trp2 = triangle(to[I], to[J], to[K]);
 
