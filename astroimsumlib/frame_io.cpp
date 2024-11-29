@@ -12,7 +12,6 @@ void casual_framesaver::save(const frame& fr)
 {
     fits::image_hdu result_image
         = fits::image_hdu(index_array_t { fr.dimentions() });
-    result_image.bitpix = 32;
     result_image.data   = data_t(fr.data().begin(), fr.data().end());
 
     auto hdus = array_t<fits::hdu> { result_image };
