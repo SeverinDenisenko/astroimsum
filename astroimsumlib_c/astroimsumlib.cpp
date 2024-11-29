@@ -75,7 +75,7 @@ int astroimsum_access_frame(
     struct astroimsum_frame* frame_in,
     int* width_out,
     int* height_out,
-    unsigned long** data_out)
+    float** data_out)
 {
     int res = 0;
 

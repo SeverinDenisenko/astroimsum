@@ -14,7 +14,7 @@ public:
     struct image_hdu {
         using dcontainer_t                 = array_t<data_type_t>;
         static constexpr int hdu_type_enum = IMAGE_HDU;
-        static constexpr int dtype_enum    = TULONG;
+        static constexpr int dtype_enum    = TFLOAT;
 
         image_hdu() = default;
         image_hdu(index_array_t axes)
