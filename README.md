@@ -6,6 +6,7 @@
 
 ![example](data/example.png)
 ![example](data/example2.png)
+![example](data/example3.png)
 
 This tool can add images (in .fits format) with stars on them. Tool computes proper transform frame to frame, to make all sourses line up together.
 
@@ -52,3 +53,7 @@ base_frame_loaded.write("result.fits")
 - Source extractor
 - Boost
 - C++17 or higher
+
+## Known issues
+
+- Sometimes transformation is just total grbage, I can't fix that. If so folow astrometry.net example.

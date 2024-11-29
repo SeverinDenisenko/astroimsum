@@ -1,6 +1,7 @@
 #include "frame_io.hpp"
 
 #include "fits.hpp"
+#include "types.hpp"
 
 namespace astro {
 casual_framesaver::casual_framesaver(string_t out_name)
@@ -15,7 +16,7 @@ void casual_framesaver::save(const frame& fr)
     result_image.data = data_t(fr.data().begin(), fr.data().end());
 
     auto hdus = array_t<fits::hdu> { result_image };
-    fits fits_out(out_name_, hdus, array_t<string_t>());
+    fits fits_out(out_name_, hdus, fr.cards());
 }
 
 batch_frameloader::batch_frameloader(array_t<string_t> files)
@@ -27,11 +28,15 @@ batch_frameloader::batch_frameloader(array_t<string_t> files)
         fits::image_hdu hdu = std::get<fits::image_hdu>(fits_file.hdus[0]);
         hdus_.emplace_back(hdu);
 
+        array_t<string_t> cards       = fits_file.get_cards();
+        unsigned_integer_t skip_cards = 10;
+
         frames_.emplace_back(
             hdus_.back().data,
             hdus_.back().naxes[0],
             hdus_.back().naxes[1],
-            name);
+            name,
+            array_t<string_t>(cards.begin() + skip_cards, cards.end()));
     }
 }
 

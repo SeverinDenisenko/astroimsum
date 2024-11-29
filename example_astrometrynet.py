@@ -10,7 +10,8 @@ from glob import glob
 
 from astrometrynet.net.client import client
 
-frames = glob("./data/2015_HB10_H_alpha_*.fits")
+# frames = glob("./data/2015_HB10_H_alpha_*.fits")
+frames = glob("./data/[R,V,B]/*.FTS")
 
 # Add WCS to frames
 """
@@ -23,8 +24,8 @@ for frame in frames:
     options = client.ClientRunnerOptions(
         upload=frame,
         apikey="", # Add api key
-        scale_est=0.39,
-        scale_err=10,
+        # scale_est=0.39,
+        # scale_err=10,
         center_ra=c.ra.degree,
         center_dec=c.dec.degree,
         radius=0.5,
