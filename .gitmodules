@@ -4,3 +4,6 @@
 [submodule "astrometrynet"]
 	path = astrometrynet
 	url = https://github.com/SeverinDenisenko/astrometry.net.git
+[submodule "deps/cfitsio"]
+	path = deps/cfitsio
+	url = https://github.com/HEASARC/cfitsio.git
