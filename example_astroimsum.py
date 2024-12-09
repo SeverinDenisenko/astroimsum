@@ -16,12 +16,10 @@ lib = astroimsum.astroimsum()
 base_frame_loaded = lib.load_frame(base_frame)
 lib.set_base_frame(base_frame_loaded)
 
-other_frames_loaded = []
 for frame in other_frames:
-    other_frames_loaded.append(lib.load_frame(frame))
-
-for frame in other_frames_loaded:
-    lib.add_frame(frame)
+    loaded_frame = lib.load_frame(frame)
+    lib.add_frame(loaded_frame)
+    del loaded_frame
 
 base_frame_loaded.write("result.fits")
 
