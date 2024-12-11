@@ -1,3 +1,6 @@
+#include "fits.hpp"
+#include "frame.hpp"
+#include "frame_io.hpp"
 #include "linalg.hpp"
 #include "source_extractor.hpp"
 #include "types.hpp"
@@ -6,10 +9,12 @@ using namespace astro;
 
 int main()
 {
-    source_extractor extractor;
+    embeded_source_extractor extractor;
+    batch_frameloader frameloader(
+        array_t<string_t> { string_t("data/2015_HB10_H_alpha_003.fits") });
+    frame f = frameloader.get_frame();
 
-    array_t<point_t> points
-        = extractor.extract("data/J75_01_20120806022018.fits");
+    array_t<point_t> points = extractor.extract(f);
 
     std::cout << points.size();
 

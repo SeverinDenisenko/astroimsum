@@ -7,3 +7,6 @@
 [submodule "deps/cfitsio"]
 	path = deps/cfitsio
 	url = https://github.com/HEASARC/cfitsio.git
+[submodule "deps/sep"]
+	path = deps/sep
+	url = https://github.com/SeverinDenisenko/sep.git
