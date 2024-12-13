@@ -1,16 +1,18 @@
 #include "sumation.hpp"
 
 #include "astrometric_reduction.hpp"
+#include "frame_processing.hpp"
 #include "linalg.hpp"
 #include "source_extractor.hpp"
 #include "threadpool.hpp"
+#include <cstdio>
 
 namespace astro {
 basic_star_sumattor::basic_star_sumattor(frame base_frame)
     : base_frame_(base_frame)
     , current_(0)
 {
-    base_frame_points_ = source_extractor().extract(base_frame_.name());
+    base_frame_points_ = embeded_source_extractor().extract(base_frame_);
     std::cout << base_frame_.name() << ": N = " << base_frame_points_.size()
               << std::endl;
 }
@@ -26,7 +28,7 @@ void basic_star_sumattor::sum(frame fr)
     std::cout << "Generating transform from " << fr.name() << " to "
               << base_frame_.name() << std::endl;
 
-    array_t<point_t> to = source_extractor().extract(fr.name());
+    array_t<point_t> to = embeded_source_extractor().extract(fr);
     std::cout << fr.name() << ": N = " << to.size() << std::endl;
 
     source_matcher matcher;

@@ -47,10 +47,12 @@ pair_t<triangle_t> source_matcher::match(
         static_array_t<float, 3> trp1 = triangle(from[I], from[J], from[K]);
 
         for (unsigned_integer_t j = 0; j < to_tris.size(); j++) {
+            triangle_t to_tri = to_tris[j];
+
             for (int k = 0; k < 6; k++) {
-                unsigned_integer_t I = to_tris[j][Q[k][0]];
-                unsigned_integer_t J = to_tris[j][Q[k][1]];
-                unsigned_integer_t K = to_tris[j][Q[k][2]];
+                unsigned_integer_t I = to_tri[Q[k][0]];
+                unsigned_integer_t J = to_tri[Q[k][1]];
+                unsigned_integer_t K = to_tri[Q[k][2]];
 
                 if (I >= from.size() || J >= from.size() || K >= from.size()) {
                     continue;
@@ -160,23 +162,16 @@ source_matcher::match(const array_t<point_t>& from, const array_t<point_t>& to)
     array_t<unsigned_integer_t> i1;
     array_t<unsigned_integer_t> I1;
 
-    for (unsigned_integer_t k = 0; k < from.size(); ++k) {
+    for (unsigned_integer_t k = 0; k < std::min(from.size(), to.size()); ++k) {
         vector_t d(P1X.size());
         for (unsigned_integer_t j = 0; j < d.size(); ++j) {
             d[j] = sqrt(
                 pow(P1X[j] - from[k][0], 2) + pow(P1Y[j] - from[k][1], 2));
         }
 
-        real_t min                 = 1e100;
-        unsigned_integer_t min_arg = 0;
-        for (unsigned_integer_t j = 0; j < d.size(); ++j) {
-            if (d[j] < min) {
-                min     = d[j];
-                min_arg = j;
-            }
-        }
+        unsigned_integer_t min_arg = argmin(d);
 
-        if (min < 5) {
+        if (d[min_arg] < 5) {
             i1.push_back(k);
             I1.push_back(min_arg);
         }

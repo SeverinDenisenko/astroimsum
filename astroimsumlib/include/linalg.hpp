@@ -99,7 +99,7 @@ inline real_t max(vector_t a)
     return m;
 }
 
-inline unsigned_integer_t argmax(vector_t a)
+inline unsigned_integer_t argmax(const vector_t& a)
 {
     if (a.empty()) {
         throw std::runtime_error("argmax: vector is empty");
@@ -108,6 +108,22 @@ inline unsigned_integer_t argmax(vector_t a)
     unsigned_integer_t r = 0;
     for (unsigned_integer_t i = 0; i < a.size(); ++i) {
         if (a[i] > m) {
+            m = a[i];
+            r = i;
+        }
+    }
+    return r;
+}
+
+inline unsigned_integer_t argmin(const vector_t& a)
+{
+    if (a.empty()) {
+        throw std::runtime_error("argmax: vector is empty");
+    }
+    real_t m             = a[0];
+    unsigned_integer_t r = 0;
+    for (unsigned_integer_t i = 0; i < a.size(); ++i) {
+        if (a[i] < m) {
             m = a[i];
             r = i;
         }

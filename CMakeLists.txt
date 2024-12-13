@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/cfitsio)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/TRIANGLE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/GSL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/sep)
 find_package(Boost COMPONENTS thread REQUIRED)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
