@@ -9,6 +9,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/cfitsio)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/TRIANGLE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/GSL)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/sep)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/wcslib)
 find_package(Boost COMPONENTS thread REQUIRED)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

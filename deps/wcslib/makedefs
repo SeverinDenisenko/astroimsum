@@ -1,0 +1,287 @@
+#-----------------------------------------------------------------------------
+# GNU makefile definitions for building WCSLIB 8.4
+#
+# makedefs is generated from makedefs.in by configure.  It contains variable
+# definitions and some general-purpose rules for building WCSLIB.
+#
+# Targets defined here
+# --------------------
+#   printenv:  Print the environment as seen within makefile rules.
+#   show:      Print the values of all makefile variables used.
+#
+# Notes:
+#   1) If you need to make changes then it may be preferable to modify
+#      makedefs.in (not makedefs).  The makefile will detect this and
+#      automatically re-run config.status to regenerate makedefs.
+#
+#   2) There are three choices for trigd functions - cosd(), sind(), tand(),
+#      acosd(), asind(), atand(), and atan2d(), made by setting WCSTRIG:
+#
+#      1: Use the wrapper functions supplied with WCSLIB (default):
+#         WCSTRIG := WRAPPER
+#
+#      2: Use native trigd functions supplied in a mathematics library such
+#         as libsunmath (you will also need to add the library to the LIBS
+#         variable below):
+#         WCSTRIG := NATIVE
+#
+#      3: Use C preprocessor macro implementations of the trigd functions
+#         (this method is typically 20% faster but may lead to rounding
+#         errors near the poles):
+#         WCSTRIG := MACRO
+#
+#   3) Variables for creating the shared (dynamic) library are currently
+#      only set by 'configure' if the GNU C compiler is used.  However,
+#      you can set these variables by hand, preferably in makedefs.in.
+#
+#      Shared libraries require position-independent code (PIC) which imposes
+#      a performance overhead.  Consequently the static libraries are
+#      compiled separately without this option.
+#
+#      The shared library will be installed with version number, e.g. as
+#      libwcs.so.8.4 or libwcs.8.4.dylib with or without the symlink
+#      required to make it visible to the linker (controlled by the SHRLN
+#      variable).  On Macs it is deliberately not created because its very
+#      existence precludes static linking with the cctools linker.  You can
+#      still link dynamically by using -lwcs.8.4.
+#
+#   4) PGPLOT is Tim Pearson's Fortran graphics library with separate C
+#      interface available from astro.caltech.edu.  It is only required by
+#      one utility, wcsgrid, and the test programs that plot test grids
+#      (tprj2, tcel1, tcel2, tspc, ttab2, ttab3, twcsmix, and tpih2).  You can
+#      skip these by setting PGPLOTLIB to blank.
+#
+#      It is difficult for configure to deduce what auxiliary graphics
+#      libraries may be needed for PGPLOT since it depends on which of many
+#      possible graphics drivers were selected when PGPLOT was installed.
+#      Therefore it is quite likely that you will need to add additional
+#      libraries to PGPLOTLIB.
+#
+#   5) CFITSIO is Bill Pence's FITS I/O library written in C with Fortran
+#      wrappers, available from http://heasarc.gsfc.nasa.gov/fitsio.
+#
+#      CFITSIO is required by three utilities, HPXcvt, wcsgrid, and wcsware,
+#      and also by the test programs twcstab and twcshdr.  wcsware and the
+#      test programs use fits_read_wcstab() which is implemented by
+#      getwcstab.c.  However, this implementation is included in CFITSIO post
+#      3.004beta, so getwcstab.c is required here only for older releases
+#      (controlled by variable GETWCSTAB).  getwcstab.o itself is not inserted
+#      into the WCSLIB object library.
+#
+#      If available, CFITSIO is also optionally used for test programs
+#      tfitshdr, tbth1, tpih1 and tpih2 by setting preprocessor macro
+#      -DDO_CFITSIO.
+#
+# Author: Mark Calabretta, Australia Telescope National Facility, CSIRO.
+# http://www.atnf.csiro.au/people/Mark.Calabretta
+# $Id: makedefs.in,v 8.4 2024/10/28 13:56:17 mcalabre Exp $
+#-----------------------------------------------------------------------------
+# Version.
+  LIBVER    := 8.4
+  WCSLIBPKG := wcslib-8.4
+
+# Additional options for GNU make added by configure.
+  MAKEFLAGS += 
+
+# System architecture.
+  ARCH     := arm-darwin23.5.0
+
+# Flex and options.
+  FLEX     := flex
+  FLFLAGS  := -D_POSIX_C_SOURCE=1
+
+# C preprocessor and options.
+  CPP      := gcc -E
+  CPPFLAGS := 
+  WCSTRIG  := WRAPPER
+
+# C compiler and options.
+  CC       := gcc
+  CFLAGS   := -g -O2
+
+# Fortran compiler and options.
+  FC       := gfortran
+  FFLAGS   := -g -O2 -I.
+
+# Use the Fortran 2003 BIND(C) wrappers?  (Recommended for LTO.)
+  BINDC    := 
+
+# Static object library.
+  WCSLIB   := libwcs-$(LIBVER).a
+  ARFLAGS  := 
+  RANLIB   := ranlib
+
+# Shared (dynamic) library (see note 3 above).
+  SHRLIB   := libwcs.8.4.dylib
+  SONAME   := libwcs.8.dylib
+  SHRFLAGS := -fPIC
+  SHRLD    := $(CC) $(SHRFLAGS) -dynamiclib -single_module -compatibility_version 8 -current_version 8.4 -install_name $(SONAME)
+  SHRLN    := libwcs.dylib
+
+# What subdirectories to build.
+  SUBDIRS  := C Fortran utils
+  TSTDIRS  := C Fortran
+
+# Top of the 'make install' hierarchy: pgsbox -> Fortran -> C.
+  INSTDIR  := Fortran utils
+
+# Installation utilities and locations.
+  LN_S     := ln -s
+  INSTALL  := /opt/homebrew/bin/ginstall -c
+
+  # Needed for the definitions provided by autoconf.
+  prefix          := /usr/local
+  exec_prefix     := ${prefix}
+  datarootdir     := ${prefix}/share
+  PACKAGE_TARNAME := wcslib-8.4
+  docdir          := ${datarootdir}/doc/${PACKAGE_TARNAME}
+
+  LIBDIR   := $(DESTDIR)${exec_prefix}/lib
+  BINDIR   := $(DESTDIR)${exec_prefix}/bin
+  INCDIR   := $(DESTDIR)${prefix}/include/wcslib-$(LIBVER)
+  INCLINK  := $(DESTDIR)${prefix}/include/wcslib
+  DOCDIR   := $(DESTDIR)${datarootdir}/doc/${PACKAGE_TARNAME}
+  DOCLINK  := $(dir $(DESTDIR)${datarootdir}/doc/${PACKAGE_TARNAME})wcslib
+  HTMLDIR  := $(DESTDIR)${docdir}
+  PDFDIR   := $(DESTDIR)${docdir}
+  MANDIR   := $(DESTDIR)${datarootdir}/man
+
+# For putting timestamps in the build log.
+  TIMER    := date +"%a %Y/%m/%d %X %z, executing on $$HOST"
+
+
+# The remaining options are for building utilities and test programs.
+# -------------------------------------------------------------------
+# Linker options (use CC for linking).
+  LD       = $(CC)
+  LDFLAGS := -L/usr/local/lib -L/usr/X11/lib
+
+# PGPLOT (see note 4 above).
+  PGPLOTINC := 
+  PGPLOTLIB := 
+
+# CFITSIO (see note 5 above).
+  CFITSIOINC := 
+  CFITSIOLIB := 
+  GETWCSTAB  := 
+
+# Libraries required by the above Fortran compiler.
+  FLIBS := -L/opt/homebrew/Cellar/gcc/14.2.0_1/lib/gcc/current -L/opt/homebrew/Cellar/gcc/14.2.0_1/lib/gcc/current/gcc -L/opt/homebrew/Cellar/gcc/14.2.0_1/lib/gcc/current/gcc/aarch64-apple-darwin23/14 -lemutls_w -lheapt_w -lgfortran -lquadmath
+
+# Libraries required by WCSLIB itself.
+  LIBS := -lm 
+
+# Default observer coordinates for sundazel.  May be set as environment
+# variables, either generally or in $HOME/.sundazelrc, which is read by
+# configure.
+  OBSLNG := 0.0
+  OBSLAT := 0.0
+  OBSTZ  := 0.0
+
+#-----------------------------------------------------------------------------
+# You shouldn't need to change anything below here.
+#-----------------------------------------------------------------------------
+
+SHELL := /bin/sh
+VPATH := ..
+
+# Common targets.
+.PHONY : all build FORCE printenv show
+
+all : show
+	-@ echo ''
+	 @ $(MAKE) build
+
+FORCE :
+
+# Print the environment as seen by makefile rules.
+printenv :
+	-@ printenv | sort
+
+# Print variable definitions.
+show :: wcsconfig.h
+	-@ echo ''
+	-@ uname -a
+	-@ echo ''
+	-@ $(MAKE) --version | head -1
+	-@ echo '  SUBDIR      := $(SUBDIR)'
+	-@ echo '  MAKEFLAGS   := $(MAKEFLAGS)'
+	-@ echo ''
+	-@ echo 'For building and installing $(WCSLIBPKG)...'
+	-@ echo '  ARCH        := $(ARCH)'
+	-@ echo '  FLEX        := $(FLEX)'
+	-@ echo '  FLFLAGS     := $(FLFLAGS)'
+	-@ echo '  CPP         := $(CPP)'
+	-@ echo '  CPPFLAGS    := $(CPPFLAGS)'
+	-@ echo '  WCSTRIG     := $(WCSTRIG)'
+	-@ echo '  CC          := $(CC)'
+	-@ if [ "" ] ; then \
+	     echo '                 GCC version is ' ; \
+	   fi
+	-@ echo '  CFLAGS      := $(CFLAGS)'
+	-@ echo '  FC          := $(FC)'
+	-@ echo '  FFLAGS      := $(FFLAGS)'
+	-@ echo '  BINDC       := $(BINDC)'
+	-@ echo '  WCSLIB      := $(WCSLIB)'
+	-@ echo '  ARFLAGS     := $(ARFLAGS)'
+	-@ echo '  RANLIB      := $(RANLIB)'
+	-@ echo '  SHRLIB      := $(SHRLIB)'
+	-@ echo '  SONAME      := $(SONAME)'
+	-@ echo '  SHRFLAGS    := $(SHRFLAGS)'
+	-@ echo '  SHRLD       := $(SHRLD)'
+	-@ echo '  SHRLN       := $(SHRLN)'
+	-@ echo '  LN_S        := $(LN_S)'
+	-@ echo '  INSTALL     := $(INSTALL)'
+	-@ echo '  LIBDIR      := $(LIBDIR)'
+	-@ echo '  BINDIR      := $(BINDIR)'
+	-@ echo '  INCDIR      := $(INCDIR)'
+	-@ echo '  INCLINK     := $(INCLINK)'
+	-@ echo '  DOCDIR      := $(DOCDIR)'
+	-@ echo '  DOCLINK     := $(DOCLINK)'
+	-@ echo '  HTMLDIR     := $(HTMLDIR)'
+	-@ echo '  PDFDIR      := $(PDFDIR)'
+	-@ echo '  MANDIR      := $(MANDIR)'
+	-@ echo '  TIMER       := $(TIMER)'
+	-@ echo ''
+	-@ echo 'Important wcsconfig.h defines...'
+	-@ echo "  `grep HAVE_SINCOS $<`"
+	-@ echo "  `grep WCSLIB_INT64 $<`"
+	-@ echo ''
+	-@ echo 'To build utilities and test programs...'
+	-@ echo '  LD          := $(LD)'
+	-@ echo '  LDFLAGS     := $(LDFLAGS)'
+	-@ echo '  PGPLOTINC   := $(PGPLOTINC)'
+	-@ echo '  PGPLOTLIB   := $(PGPLOTLIB)'
+	-@ echo '  CFITSIOINC  := $(CFITSIOINC)'
+	-@ echo '  CFITSIOLIB  := $(CFITSIOLIB)'
+	-@ echo '  GETWCSTAB   := $(GETWCSTAB)'
+	-@ echo '  FLIBS       := $(FLIBS)'
+	-@ echo '  LIBS        := $(LIBS)'
+	-@ echo ''
+	-@ echo 'Default observer coordinates for sundazel...'
+	-@ echo '  OBSLNG      := $(OBSLNG)'
+	-@ echo '  OBSLAT      := $(OBSLAT)'
+	-@ echo '  OBSTZ       := $(OBSTZ)'
+	-@ echo ''
+	-@ echo 'For code development...'
+	-@ echo '  FLAVOUR     := $(FLAVOUR)'
+	-@ echo '  MODE        := $(MODE)'
+	-@ echo '  VALGRIND    := $(VALGRIND)'
+	-@ echo '  EXTRA_CLEAN := $(EXTRA_CLEAN)'
+	-@ echo ''
+
+# For code development.
+FLAVOUR     := 
+MODE        := 
+VALGRIND    := 
+EXTRA_CLEAN := 
+
+# Check MODE.
+ifeq "$(MODE)" "interactive"
+  # Important not to have output batched when running the test programs.
+  MAKEFLAGS := $(filter-out -Otarget,$(MAKEFLAGS)) -Onone
+endif
+
+ifneq "$(FLAVOUR)" "default"
+  TIMER := $(TIMER) ; echo "    with $(FLAVOUR) FLAVOUR."
+endif
