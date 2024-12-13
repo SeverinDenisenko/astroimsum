@@ -4,7 +4,8 @@ set(IMSUM_LIB_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/sumation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source_extractor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/astrometric_reduction.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/delaney.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/delaney.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/frame_frocessing.cpp)
 add_library(imsumlib OBJECT ${IMSUM_LIB_SRC})
 set_property(TARGET imsumlib PROPERTY POSITION_INDEPENDENT_CODE 1)
 

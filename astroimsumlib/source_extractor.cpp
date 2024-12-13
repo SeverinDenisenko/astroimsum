@@ -1,6 +1,7 @@
 #include "source_extractor.hpp"
 #include "linalg.hpp"
 #include "types.hpp"
+#include "frame_processing.hpp"
 
 #include <boost/process.hpp>
 #include <boost/process/pipe.hpp>
@@ -111,15 +112,15 @@ array_t<point_t> embeded_source_extractor::extract(frame frame)
 
     status = sep_extract(
         &image,
-        30.0 * bkg->globalrms,
+        3.0 * bkg->globalrms,
         SEP_THRESH_ABS,
-        5,
+        10,
         conv,
         3,
         3,
         SEP_FILTER_CONV,
-        32,
-        1.0,
+        28,
+        0.005,
         1,
         1.0,
         &catalog);
@@ -131,6 +132,9 @@ array_t<point_t> embeded_source_extractor::extract(frame frame)
         result[i][0] = catalog->x[i];
         result[i][1] = catalog->y[i];
     }
+
+    sep_catalog_free(catalog);
+    sep_bkg_free(bkg);
 
     return result;
 }

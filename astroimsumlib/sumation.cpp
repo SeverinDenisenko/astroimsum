@@ -1,9 +1,11 @@
 #include "sumation.hpp"
 
 #include "astrometric_reduction.hpp"
+#include "frame_processing.hpp"
 #include "linalg.hpp"
 #include "source_extractor.hpp"
 #include "threadpool.hpp"
+#include <cstdio>
 
 namespace astro {
 basic_star_sumattor::basic_star_sumattor(frame base_frame)
