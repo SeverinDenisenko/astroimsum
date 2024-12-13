@@ -12,7 +12,6 @@ extern "C" {
 
 #include <cstddef>
 #include <fstream>
-#include <malloc/_malloc.h>
 #include <sstream>
 #include <stdexcept>
 
