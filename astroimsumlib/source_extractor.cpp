@@ -1,7 +1,7 @@
 #include "source_extractor.hpp"
+#include "frame_processing.hpp"
 #include "linalg.hpp"
 #include "types.hpp"
-#include "frame_processing.hpp"
 
 #include <boost/process.hpp>
 #include <boost/process/pipe.hpp>
@@ -97,7 +97,7 @@ array_t<point_t> embeded_source_extractor::extract(frame frame)
     }
 
     array_t<double> imback(frame.data().size());
-    status        = sep_bkg_array(bkg, imback.data(), SEP_TDOUBLE);
+    status = sep_bkg_array(bkg, imback.data(), SEP_TDOUBLE);
     if (status) {
         char errtext[512];
         sep_get_errdetail(errtext);
