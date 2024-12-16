@@ -8,11 +8,13 @@
 #include <cstdio>
 
 namespace astro {
-basic_star_sumattor::basic_star_sumattor(frame base_frame)
+basic_star_sumattor::basic_star_sumattor(
+    frame base_frame, uptr<source_extractor_interface> source_extractor)
     : base_frame_(base_frame)
+    , source_extractor_(std::move(source_extractor))
     , current_(0)
 {
-    base_frame_points_ = embeded_source_extractor().extract(base_frame_);
+    base_frame_points_ = source_extractor_->extract(base_frame_);
     std::cout << base_frame_.name() << ": N = " << base_frame_points_.size()
               << std::endl;
 }
@@ -28,7 +30,7 @@ void basic_star_sumattor::sum(frame fr)
     std::cout << "Generating transform from " << fr.name() << " to "
               << base_frame_.name() << std::endl;
 
-    array_t<point_t> to = embeded_source_extractor().extract(fr);
+    array_t<point_t> to = source_extractor_->extract(fr);
     std::cout << fr.name() << ": N = " << to.size() << std::endl;
 
     source_matcher matcher;

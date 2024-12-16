@@ -1,6 +1,8 @@
 #include "source_extractor.hpp"
+#include "frame.hpp"
 #include "frame_processing.hpp"
 #include "linalg.hpp"
+#include "path_find.hpp"
 #include "types.hpp"
 
 #include <boost/process.hpp>
@@ -16,34 +18,40 @@ extern "C" {
 #include <stdexcept>
 
 namespace astro {
-array_t<point_t> source_extractor::extract(string_t file)
+
+external_source_extractor::external_source_extractor(
+    external_source_extractor_params params)
+    : params_(params)
+{
+}
+
+array_t<point_t> external_source_extractor::extract(frame f)
 {
     namespace bp = boost::process;
+    namespace fs = boost::filesystem;
 
     array_t<string_t> names = { "sex", "sextractor", "source-extractor" };
-    string_t sex            = "";
-    for (string_t name : names) {
-        if (!system(("which " + name + " > /dev/null 2>&1").c_str())) {
-            sex = name;
-            break;
-        }
-    }
-    if (sex == "") {
-        throw std::runtime_error("Can't find sextractor");
-    }
+    string_t sex            = path_find(names);
+    string_t config_absolute
+        = fs::canonical("config.sex", params_.path).string();
+    string_t frame_absolute = fs::canonical(f.name()).string();
 
-    std::stringstream cmd;
-    cmd << sex << " " << file << " -c "
-        << "config.sex";
+    array_t<string_t> args = { frame_absolute, "-c", config_absolute };
 
     bp::ipstream stdout;
     bp::ipstream stderr;
-    bp::child child(cmd.str(), bp::std_out > stdout, bp::std_err > stderr);
+    bp::child child(
+        bp::search_path(sex),
+        args,
+        bp::std_out > stdout,
+        bp::std_err > stderr,
+        bp::start_dir(params_.path));
     child.join();
 
     array_t<point_t> result;
 
-    std::ifstream list("list.cat");
+    string_t result_absolute = fs::canonical("list.cat", params_.path).string();
+    std::ifstream list(result_absolute);
     string_t str;
     while (std::getline(list, str)) {
         if (str.front() == '#') {
@@ -62,6 +70,12 @@ array_t<point_t> source_extractor::extract(string_t file)
     }
 
     return result;
+}
+
+embeded_source_extractor::embeded_source_extractor(
+    embeded_source_extractor_params params)
+    : params_(params)
+{
 }
 
 array_t<point_t> embeded_source_extractor::extract(frame frame)
@@ -111,15 +125,15 @@ array_t<point_t> embeded_source_extractor::extract(frame frame)
 
     status = sep_extract(
         &image,
-        3.0 * bkg->globalrms,
+        params_.detect_treshold * bkg->globalrms,
         SEP_THRESH_ABS,
-        10,
+        params_.detect_minarea,
         conv,
         3,
         3,
         SEP_FILTER_CONV,
-        28,
-        0.005,
+        params_.deblend_ntreshold,
+        params_.deblend_mincount,
         1,
         1.0,
         &catalog);

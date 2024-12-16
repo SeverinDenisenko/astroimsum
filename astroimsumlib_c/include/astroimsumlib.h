@@ -37,6 +37,8 @@ int astroimsum_write_frame(
  * Main routine for frame summation
  * Result is placed in base frame
  */
+int astroimsum_set_config(
+    struct astroimsum* handle_in, const char* config_path_in);
 int astroimsum_set_base_frame(
     struct astroimsum* handle_in, struct astroimsum_frame* frame_in);
 int astroimsum_add_frame(

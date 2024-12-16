@@ -9,7 +9,9 @@ using namespace astro;
 
 int main()
 {
-    embeded_source_extractor extractor;
+    embeded_source_extractor_params params {};
+    embeded_source_extractor extractor(params);
+
     batch_frameloader frameloader(
         array_t<string_t> { string_t("data/2015_HB10_H_alpha_003.fits") });
     frame f = frameloader.get_frame();

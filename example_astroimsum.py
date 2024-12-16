@@ -12,6 +12,7 @@ base_frame = frames[base_frame_index]
 other_frames = frames[:base_frame_index] + frames[base_frame_index + 1 :]
 
 lib = astroimsum.astroimsum()
+lib.set_config("config.cfg")
 
 base_frame_loaded = lib.load_frame(base_frame)
 lib.set_base_frame(base_frame_loaded)
