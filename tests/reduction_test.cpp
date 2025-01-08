@@ -11,8 +11,7 @@ int main(int, char* argv[])
     frame f1 = loader.get_frame();
     frame f2 = loader.get_frame();
 
-    external_source_extractor_params params { .path
-                                              = "./sextractor/" };
+    external_source_extractor_params params { .path = "./sextractor/" };
     external_source_extractor extractor { params };
     array_t<point_t> from = extractor.extract(f1);
     array_t<point_t> to   = extractor.extract(f2);

@@ -24,7 +24,7 @@ static void sum_images(
     frame base_frame = frameloader->get_frame();
 
     sptr<iframesaver> framesaver = make_sptr<casual_framesaver>("out.fits");
-    sptr<frame_summator_interface> sumattor     = make_sptr<delaney_frame_summator>(
+    sptr<frame_summator_interface> sumattor = make_sptr<delaney_frame_summator>(
         base_frame, std::move(source_extractor));
 
     while (frameloader->has_more()) {

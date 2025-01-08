@@ -12,8 +12,7 @@ int main()
         array_t<string_t> { "data/2015_HB10_H_alpha_002.fits" });
     frame f = loader.get_frame();
 
-    external_source_extractor_params params { .path
-                                              = "./sextractor/" };
+    external_source_extractor_params params { .path = "./sextractor/" };
     external_source_extractor extractor { params };
 
     array_t<point_t> points = extractor.extract(f);
