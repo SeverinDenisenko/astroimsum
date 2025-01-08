@@ -1,4 +1,4 @@
-#include "sumation.hpp"
+#include "summation.hpp"
 
 #include "astrometric_reduction.hpp"
 #include "frame_processing.hpp"
@@ -8,18 +8,17 @@
 #include <cstdio>
 
 namespace astro {
-basic_star_sumattor::basic_star_sumattor(
+delaney_frame_summator::delaney_frame_summator(
     frame base_frame, uptr<source_extractor_interface> source_extractor)
     : base_frame_(base_frame)
     , source_extractor_(std::move(source_extractor))
-    , current_(0)
 {
     base_frame_points_ = source_extractor_->extract(base_frame_);
     std::cout << base_frame_.name() << ": N = " << base_frame_points_.size()
               << std::endl;
 }
 
-void basic_star_sumattor::sum(frame fr)
+void delaney_frame_summator::sum(frame fr)
 {
     uint32_t threads = 8;
     threadpool pool(threads);
@@ -73,7 +72,22 @@ void basic_star_sumattor::sum(frame fr)
     std::cout << "Frame " << fr.name() << " done" << std::endl;
 }
 
-frame basic_star_sumattor::result()
+frame delaney_frame_summator::result()
+{
+    return base_frame_;
+}
+
+wcs_frame_summator::wcs_frame_summator(frame base_frame)
+    : base_frame_(base_frame)
+{
+}
+
+void wcs_frame_summator::sum(frame fr)
+{
+    // https://github.com/Punzo/wcslib/blob/master/C/test/twcstab.c
+}
+
+frame wcs_frame_summator::result()
 {
     return base_frame_;
 }

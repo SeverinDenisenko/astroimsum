@@ -1,7 +1,7 @@
 set(IMSUM_LIB_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/fits.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/frame_io.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/sumation.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/summation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/source_extractor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/astrometric_reduction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/delaney.cpp

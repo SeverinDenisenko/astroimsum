@@ -10,7 +10,7 @@
 #include "libconfig.h++"
 #include "linalg.hpp"
 #include "source_extractor.hpp"
-#include "sumation.hpp"
+#include "summation.hpp"
 #include "types.hpp"
 
 #include <boost/program_options.hpp>
@@ -24,7 +24,7 @@ static void sum_images(
     frame base_frame = frameloader->get_frame();
 
     sptr<iframesaver> framesaver = make_sptr<casual_framesaver>("out.fits");
-    sptr<isumattor> sumattor     = make_sptr<basic_star_sumattor>(
+    sptr<frame_summator_interface> sumattor     = make_sptr<delaney_frame_summator>(
         base_frame, std::move(source_extractor));
 
     while (frameloader->has_more()) {

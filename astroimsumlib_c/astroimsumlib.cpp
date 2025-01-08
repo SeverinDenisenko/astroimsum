@@ -4,14 +4,14 @@
 #include "frame.hpp"
 #include "frame_io.hpp"
 #include "source_extractor.hpp"
-#include "sumation.hpp"
+#include "summation.hpp"
 #include "types.hpp"
 
 using namespace astro;
 
 struct astroimsum {
     config cfg;
-    uptr<isumattor> sumattor;
+    uptr<frame_summator_interface> sumattor;
 };
 
 struct astroimsum_frame {
@@ -159,7 +159,7 @@ int astroimsum_set_base_frame(
                 handle_in->cfg.external_source_extractor);
         }
 
-        handle_in->sumattor = make_uptr<basic_star_sumattor>(
+        handle_in->sumattor = make_uptr<delaney_frame_summator>(
             frame_in->astro_frame, std::move(extractor));
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
