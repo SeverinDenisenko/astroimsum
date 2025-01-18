@@ -11,7 +11,12 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/GSL)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/sep)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/wcslib)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/libconfig)
-find_package(Boost COMPONENTS thread program_options process REQUIRED)
+
+if(APPLE)
+    find_package(Boost COMPONENTS thread program_options process REQUIRED)
+else()
+    find_package(Boost COMPONENTS thread program_options Process REQUIRED)
+endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(COMMON_COMPILE_OPTIONS -Wall -Wextra -pedantic -O0 -g)
