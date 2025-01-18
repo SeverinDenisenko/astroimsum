@@ -72,4 +72,4 @@ jobs:
 
       - name: Basic test
         working-directory: ${{ github.workspace }}
-        run: ./scripts/run_basic_test.sh
+        run: ./scripts/run_tests.sh
