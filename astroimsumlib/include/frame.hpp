@@ -17,12 +17,12 @@ public:
         data_t& data,
         index_t x_size,
         index_t y_size,
-        string_t name,
+        string_t path,
         array_t<string_t> cards)
         : data_(data.data(), data.size())
         , x_size_(x_size)
         , y_size_(y_size)
-        , name_(name)
+        , path_(path)
         , cards_(cards)
     {
     }
@@ -52,9 +52,9 @@ public:
         return data_;
     }
 
-    string_t name() const
+    path_t path() const
     {
-        return name_;
+        return path_;
     }
 
     array_t<string_t> cards() const
@@ -66,7 +66,7 @@ private:
     data_span_t data_;
     index_t x_size_;
     index_t y_size_;
-    string_t name_;
+    path_t path_;
     array_t<string_t> cards_;
 };
 }

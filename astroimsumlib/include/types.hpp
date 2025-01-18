@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstddef>
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <utility>
@@ -47,4 +48,6 @@ using index_array_t = array_t<index_t>;
 
 template <typename T>
 using pair_t = std::pair<T, T>;
+
+using path_t = std::filesystem::path;
 }
