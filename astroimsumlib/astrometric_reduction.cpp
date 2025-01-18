@@ -244,7 +244,7 @@ source_matcher::match(const array_t<point_t>& from, const array_t<point_t>& to)
         vector_t r  = vector_sqrt(vector_pow(rx, 2) + vector_pow(ry, 2));
         real_t kmax = argmax(r);
         flag        = 1;
-        if (size(x1) - it - Q <= Nmin) {
+        if (x1.size() - it - Q <= Nmin) {
             break;
         }
         if (r[kmax] > rmax) {
@@ -255,9 +255,9 @@ source_matcher::match(const array_t<point_t>& from, const array_t<point_t>& to)
     }
 
     error_x_
-        = vector_sqrt((transpose(matrix(rx)) * We) * rx / (x1.size() - it - Q));
+        = vector_sqrt((transpose(matrix(rx)) * We) * rx) / (x1.size() - it);
     error_y_
-        = vector_sqrt((transpose(matrix(ry)) * We) * ry / (y1.size() - it - Q));
+        = vector_sqrt((transpose(matrix(ry)) * We) * ry) / (y1.size() - it);
 
     // transform
 
