@@ -13,9 +13,9 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/wcslib)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/libconfig)
 
 if(APPLE)
-    find_package(Boost COMPONENTS thread program_options process REQUIRED)
+    find_package(Boost COMPONENTS thread program_options filesystem process REQUIRED)
 else()
-    find_package(Boost COMPONENTS thread program_options Process REQUIRED)
+    find_package(Boost COMPONENTS thread program_options filesystem REQUIRED)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
