@@ -13,7 +13,7 @@ This tool can add images (in .fits format) with stars on them. Tool computes pro
 ## Usage
 
 ```bash
-imsum <base-image> <images-count> <other-images>
+imsum --config <config.cfg path> --images <images list>
 ```
 
 This command adds other images to base image and results in out.fits.
@@ -48,7 +48,7 @@ base_frame_loaded.write("result.fits")
 
 ## Dependencies
 
-- Source extractor
+- Source extractor (optional)
 - Boost
 - C++17 or higher
 

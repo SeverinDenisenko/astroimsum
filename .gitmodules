@@ -10,3 +10,6 @@
 [submodule "deps/sep"]
 	path = deps/sep
 	url = https://github.com/SeverinDenisenko/sep.git
+[submodule "deps/libconfig"]
+	path = deps/libconfig
+	url = https://github.com/hyperrealm/libconfig.git

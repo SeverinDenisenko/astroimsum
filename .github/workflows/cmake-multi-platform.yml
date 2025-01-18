@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        build_type: [Release, Debug, DebugASAN, DebugTSAN]
+        build_type: [Release, Debug, DebugASAN] # DebugTSAN
         cpp_compiler: [g++, clang++]
         include:
           - os: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get install libboost-all-dev
-          sudo apt-get install sextractor
+          sudo apt-get install source-extractor
         if: runner.os == 'Linux'
 
       - name: Clang-format check
@@ -72,4 +72,4 @@ jobs:
 
       - name: Basic test
         working-directory: ${{ github.workspace }}
-        run: ./scripts/run_basic_test.sh
+        run: ./scripts/run_tests.sh

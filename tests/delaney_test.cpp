@@ -1,4 +1,6 @@
 #include "delaney.hpp"
+#include "frame.hpp"
+#include "frame_io.hpp"
 #include "source_extractor.hpp"
 #include "types.hpp"
 
@@ -6,9 +8,14 @@ using namespace astro;
 
 int main()
 {
-    source_extractor extractor;
-    array_t<point_t> points
-        = extractor.extract("data/J75_01_20120806022018.fits");
+    batch_frameloader loader(
+        array_t<string_t> { "data/2015_HB10_H_alpha_002.fits" });
+    frame f = loader.get_frame();
+
+    external_source_extractor_params params { .path = "./sextractor/" };
+    external_source_extractor extractor { params };
+
+    array_t<point_t> points = extractor.extract(f);
 
     array_t<triangle_t> indexes = triangulate_points(points);
 

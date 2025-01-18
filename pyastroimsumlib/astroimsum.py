@@ -46,12 +46,20 @@ _astroimsum.astroimsum_add_frame.argtypes = (
     ctypes.POINTER(astroimsum_handle),
     ctypes.POINTER(astroimsum_frame_handle),
 )
+_astroimsum.astroimsum_set_config.argtypes = (
+    ctypes.POINTER(astroimsum_handle),
+    ctypes.c_char_p,
+)
 
 
 class astroimsum:
     def __init__(self) -> None:
         self.handle = ctypes.POINTER(astroimsum_handle)()
         _astroimsum.astroimsum_init(ctypes.byref(self.handle))
+
+    def set_config(self, path: str) -> Any:
+        bytes = path.encode('utf-8')
+        return _astroimsum.astroimsum_set_config(self.handle, ctypes.c_char_p(bytes))
 
     def load_frame(self, name: str) -> Any:
         return frame(self, name)

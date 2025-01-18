@@ -1,4 +1,5 @@
 #include "astrometric_reduction.hpp"
+#include "frame_io.hpp"
 #include "linalg.hpp"
 #include "source_extractor.hpp"
 
@@ -6,9 +7,14 @@ using namespace astro;
 
 int main(int, char* argv[])
 {
-    source_extractor extractor;
-    array_t<point_t> from = extractor.extract(argv[1]);
-    array_t<point_t> to   = extractor.extract(argv[2]);
+    batch_frameloader loader(array_t<string_t> { argv[1], argv[2] });
+    frame f1 = loader.get_frame();
+    frame f2 = loader.get_frame();
+
+    external_source_extractor_params params { .path = "./sextractor/" };
+    external_source_extractor extractor { params };
+    array_t<point_t> from = extractor.extract(f1);
+    array_t<point_t> to   = extractor.extract(f2);
 
     pixel_transform_t transform = source_matcher().match(from, to);
 
