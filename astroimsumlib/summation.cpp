@@ -43,6 +43,10 @@ void delaney_frame_summator::sum(frame fr)
               << "x transform: " << matcher.get_transform_x()
               << "y transfrom: " << matcher.get_transform_y() << std::endl;
 
+    std::cout << "imsum: "
+              << "x error: " << matcher.get_error_x() << ", "
+              << "y error: " << matcher.get_error_y() << std::endl;
+
     pool.run_parallel_works(
         [w, h, threads, this, transform, frame = fr](size_t thr) mutable {
             long size  = w / threads;
