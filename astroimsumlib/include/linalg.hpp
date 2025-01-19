@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iomanip>
 #include <ios>
 #include <ostream>
 #include <stdexcept>

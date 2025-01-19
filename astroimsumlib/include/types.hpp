@@ -2,12 +2,12 @@
 
 #include <array>
 #include <cstddef>
-#include <filesystem>
 #include <memory>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include "boost/filesystem.hpp"
 #include "gsl/span"
 
 namespace astro {
@@ -49,5 +49,5 @@ using index_array_t = array_t<index_t>;
 template <typename T>
 using pair_t = std::pair<T, T>;
 
-using path_t = std::filesystem::path;
+using path_t = boost::filesystem::path;
 }
