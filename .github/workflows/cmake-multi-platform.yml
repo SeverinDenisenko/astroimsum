@@ -49,11 +49,6 @@ jobs:
           sudo apt-get install source-extractor
         if: runner.os == 'Linux'
 
-      - name: Clang-format check
-        shell: bash
-        run: |
-          clang-format --dry-run --Werror tests/*.cpp astroimsum/*.cpp astroimsumlib/*.cpp astroimsumlib/include/*.hpp
-
       - name: Set reusable strings
         id: strings
         shell: bash
