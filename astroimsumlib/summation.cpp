@@ -1,11 +1,9 @@
 #include "summation.hpp"
 
 #include "astrometric_reduction.hpp"
-#include "frame_processing.hpp"
 #include "linalg.hpp"
 #include "source_extractor.hpp"
 #include "threadpool.hpp"
-#include <cstdio>
 
 namespace astro {
 delaney_frame_summator::delaney_frame_summator(
@@ -14,7 +12,9 @@ delaney_frame_summator::delaney_frame_summator(
     , source_extractor_(std::move(source_extractor))
 {
     base_frame_points_ = source_extractor_->extract(base_frame_);
-    std::cout << base_frame_.name() << ": N = " << base_frame_points_.size()
+    std::cout << "imsum: "
+              << "frame " << base_frame_.path().filename().string() << ": "
+              << "found " << base_frame_points_.size() << " sources"
               << std::endl;
 }
 
@@ -26,18 +26,26 @@ void delaney_frame_summator::sum(frame fr)
     long w = fr.x_size();
     long h = fr.y_size();
 
-    std::cout << "Generating transform from " << fr.name() << " to "
-              << base_frame_.name() << std::endl;
+    std::cout << "imsum: "
+              << "generating transform from " << fr.path().filename().string()
+              << " to " << base_frame_.path().filename().string() << std::endl;
 
     array_t<point_t> to = source_extractor_->extract(fr);
-    std::cout << fr.name() << ": N = " << to.size() << std::endl;
+    std::cout << "imsum: "
+              << "frame " << fr.path().filename().string() << ": "
+              << "found " << to.size() << " sources" << std::endl;
 
     source_matcher matcher;
 
     pixel_transform_t transform = matcher.match(base_frame_points_, to);
 
-    std::cout << matcher.get_transform_x() << std::endl;
-    std::cout << matcher.get_transform_y() << std::endl;
+    std::cout << "imsum: "
+              << "x transform: " << matcher.get_transform_x()
+              << "y transfrom: " << matcher.get_transform_y() << std::endl;
+
+    std::cout << "imsum: "
+              << "x error: " << matcher.get_error_x() << ", "
+              << "y error: " << matcher.get_error_y() << std::endl;
 
     pool.run_parallel_works(
         [w, h, threads, this, transform, frame = fr](size_t thr) mutable {
@@ -69,7 +77,9 @@ void delaney_frame_summator::sum(frame fr)
             }
         });
 
-    std::cout << "Frame " << fr.name() << " done" << std::endl;
+    std::cout << "imsum: "
+              << "frame " << fr.path().filename().string() << " done"
+              << std::endl;
 }
 
 frame delaney_frame_summator::result()

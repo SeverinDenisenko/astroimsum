@@ -1,6 +1,5 @@
 #include "source_extractor.hpp"
 #include "frame.hpp"
-#include "frame_processing.hpp"
 #include "linalg.hpp"
 #include "path_find.hpp"
 #include "types.hpp"
@@ -34,7 +33,7 @@ array_t<point_t> external_source_extractor::extract(frame f)
     string_t sex            = path_find(names);
     string_t config_absolute
         = fs::canonical("config.sex", params_.path).string();
-    string_t frame_absolute = fs::canonical(f.name()).string();
+    string_t frame_absolute = fs::canonical(f.path()).string();
 
     array_t<string_t> args = { frame_absolute, "-c", config_absolute };
 

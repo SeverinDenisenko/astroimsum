@@ -1,12 +1,14 @@
 #pragma once
 
+#include <iomanip>
+#include <ios>
+#include <ostream>
 #include <stdexcept>
 
 #include "types.hpp"
 
 #define BOOST_UBLAS_NDEBUG
 
-#include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/storage.hpp>
@@ -18,6 +20,15 @@ namespace ublas = boost::numeric::ublas;
 using real_t   = float;
 using vector_t = ublas::vector<real_t>;
 using matrix_t = ublas::matrix<real_t>;
+
+inline std::ostream& operator<<(std::ostream& stream, const vector_t& vector)
+{
+    for (auto& x : vector) {
+        stream << std::fixed << std::setw(4) << x << " ";
+    }
+
+    return stream;
+}
 
 using point_t = vector_t;
 
