@@ -47,6 +47,10 @@ void delaney_frame_summator::sum(frame fr)
               << "x error: " << matcher.get_error_x() << ", "
               << "y error: " << matcher.get_error_y() << std::endl;
 
+    if(norm(matcher.get_error_x()) > 1.0 || norm(matcher.get_error_y()) > 1.0) {
+        std::cerr << "imsum: error is too large, skipping!!!" << std::endl;
+    }
+
     pool.run_parallel_works(
         [w, h, threads, this, transform, frame = fr](size_t thr) mutable {
             long size  = w / threads;
