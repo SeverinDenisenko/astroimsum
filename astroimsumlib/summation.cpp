@@ -49,6 +49,7 @@ void delaney_frame_summator::sum(frame fr)
 
     if(norm(matcher.get_error_x()) > 1.0 || norm(matcher.get_error_y()) > 1.0) {
         std::cerr << "imsum: error is too large, skipping!!!" << std::endl;
+        return;
     }
 
     pool.run_parallel_works(
