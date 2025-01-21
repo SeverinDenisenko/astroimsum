@@ -183,6 +183,10 @@ source_matcher::match(const array_t<point_t>& from, const array_t<point_t>& to)
     vector_t y2(I1.size());
 
     for (unsigned_integer_t i = 0; i < i1.size(); ++i) {
+        if (i1[i] >= from.size() || I1[i] >= to.size()) {
+            continue;
+        }
+
         x1[i] = from[i1[i]][0];
         y1[i] = from[i1[i]][1];
 
