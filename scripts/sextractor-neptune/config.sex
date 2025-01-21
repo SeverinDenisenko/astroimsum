@@ -6,12 +6,12 @@ PARAMETERS_NAME  default.param  # name of the file containing catalog contents
 #------------------------------- Extraction ----------------------------------
 DETECT_TYPE      CCD            # CCD (linear) or PHOTO (with gamma correction)
 DETECT_MINAREA   20             # min. # of pixels above threshold
-DETECT_THRESH    4.0            # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
+DETECT_THRESH    3.5            # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
 ANALYSIS_THRESH  3.0            # <sigmas> or <threshold>,<ZP> in mag.arcsec-2
 FILTER           Y              # apply filter for detection (Y or N)?
 FILTER_NAME      default.conv   # name of the file containing the filter
-DEBLEND_NTHRESH  28             # Number of deblending sub-thresholds
-DEBLEND_MINCONT  0.005          # Minimum contrast parameter for deblending
+DEBLEND_NTHRESH  58             # Number of deblending sub-thresholds
+DEBLEND_MINCONT  0.001          # Minimum contrast parameter for deblending
 
 CLEAN            Y              # Clean spurious detections? (Y or N)?
-CLEAN_PARAM      1.5            # Cleaning efficiency
+CLEAN_PARAM      5.0            # Cleaning efficiency

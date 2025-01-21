@@ -5,14 +5,14 @@ from glob import glob
 
 from pyastroimsumlib import astroimsum
 
-frames = sorted(glob("./data/2015_HB10_H_alpha_*.fits"))
+frames = sorted(glob("./data/Neptune_*.fits"))
 
 base_frame_index = len(frames) // 2 + 1
 base_frame = frames[base_frame_index]
 other_frames = frames[:base_frame_index] + frames[base_frame_index + 1 :]
 
 lib = astroimsum.astroimsum()
-lib.set_config("config.cfg")
+lib.set_config("scripts/config-test-external-Neptune.cfg")
 
 base_frame_loaded = lib.load_frame(base_frame)
 lib.set_base_frame(base_frame_loaded)
