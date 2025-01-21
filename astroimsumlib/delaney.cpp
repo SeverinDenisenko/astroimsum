@@ -57,6 +57,13 @@ array_t<triangle_t> triangulate_points(array_t<point_t> points)
     }
 
     free(out.trianglelist);
+    free(out.pointattributelist);
+    free(out.pointmarkerlist);
+    free(out.regionlist);
+    free(out.pointlist);
+    free(in.pointattributelist);
+    free(in.pointmarkerlist);
+    free(in.regionlist);
 
     return result;
 }
